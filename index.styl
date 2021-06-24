@@ -89,6 +89,7 @@ button
 	border none
 
 .btn
+	cursor pointer
 	border-radius 6px
 	text-decoration none
 	padding 0.75rem 1.5rem
@@ -307,6 +308,13 @@ $pkg-transition = 650ms
 
 .signup
 	padding-top 8rem
+	line-height 1.75
+
+.signup .btn
+	justify-self left
+	justify-self flex-start
+	margin-top 1.5rem
+	width 12rem
 
 // ---
 // FAQ section
@@ -333,6 +341,7 @@ details > *
 summary
 	cursor pointer
 	position relative
+	border-radius 0.5rem
 	display flex // allows ::marker to hide
 
 summary::after
