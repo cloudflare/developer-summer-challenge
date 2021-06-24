@@ -1,7 +1,9 @@
 $gray = #F3F3F4
 $white = #FFFFFF
-$orange = #F78100
 $black = #1D1F20 // 404041
+
+$orange1 = #FAAE40 // #FBAD41
+$orange2 = #F78100
 
 $blue1 = #E2F5FA
 $blue2 = #6ECCE5
@@ -23,7 +25,7 @@ $blue3 = #1855dc
 	// box-shadow 0 0 0 2px $orange2
 	box-shadow \
 		0 0 0 2px var(--bg, $white), \
-		0 0 0 4px $orange
+		0 0 0 4px $orange2
 
 html
 	font-size 16px
@@ -68,7 +70,7 @@ section
 	padding 4rem 0
 
 b
-	color $orange
+	color $orange2
 
 h1
 	font-size 2.4rem
@@ -99,7 +101,7 @@ button
 	color $black
 
 .btn.pri
-	background-color $orange
+	background-color $orange2
 	color $white
 
 form.grid
@@ -359,11 +361,13 @@ summary::marker,
 summary::-webkit-details-marker
 	display none
 
+details:hover
+	border-color $orange1
 details:hover summary::after
 	opacity 0.75
 
 details[open]
-	border-color $orange
+	border-color $orange2
 details[open] summary
 	font-weight 700
 details[open] summary::after
