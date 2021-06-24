@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8"/>
+		<title>Dev Challenge | Register</title>
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<link rel="preconnect" href="https://fonts.gstatic.com">
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500&display=swap">
+		<link rel="stylesheet" href="/index.styl">
+	</head>
+	<body>
+		<svg hidden xmlns="http://www.w3.org/2000/svg">
+			<symbol id="ico" viewBox="0 0 809 366">
+				<path d="M552.167 360.595l4.136-14.304c4.928-17.022 3.094-32.757-5.176-44.317-7.607-10.65-20.286-16.918-35.683-17.646l-291.649-3.719c-1.964-.104-3.589-.988-4.59-2.445-1.014-1.495-1.249-3.42-.624-5.267.962-2.874 3.81-5.045 6.775-5.175l294.354-3.732c34.915-1.6 72.717-29.935 85.955-64.486l16.788-43.862c.463-1.194.671-2.46.662-3.729-.005-.693-.055-1.387-.207-2.071C603.831 64.109 527.33 0 435.849 0c-84.291 0-155.864 54.408-181.533 130.025-16.567-12.432-37.763-19.038-60.546-16.762-40.442 4.018-72.938 36.58-76.956 77.022-1.053 10.494-.195 20.624 2.224 30.143C52.977 222.352 0 276.474 0 343.001c0 6.021.455 11.937 1.3 17.724.416 2.809 2.783 4.916 5.618 4.916l538.436.065c.053 0 .1-.024.153-.025 3.081-.069 5.791-2.107 6.66-5.086z" fill="#F78100" />
+				<path d="M649.327 158.854c-2.705 0-5.397.078-8.076.208-.442.023-.862.13-1.265.271a4.644 4.644 0 00-2.935 3.097l-11.47 39.61c-4.929 17.022-3.095 32.743 5.176 44.304 7.607 10.663 20.286 16.918 35.682 17.646l62.171 3.732c1.834.091 3.446.975 4.434 2.406 1.04 1.508 1.274 3.446.65 5.293-.975 2.874-3.81 5.045-6.762 5.176l-64.603 3.732c-35.072 1.613-72.873 29.935-86.111 64.486l-4.668 12.198c-.849 2.207.732 4.558 3.066 4.673.059.003.112.022.172.022h222.287c2.653 0 5.019-1.73 5.734-4.278 3.862-13.732 5.917-28.205 5.917-43.172.001-88.039-71.364-159.404-159.399-159.404z" fill="#FBAC42" />
+			</symbol>
+
+			<symbol id="txt" viewBox="0 0 1703 139">
+				<path d="M182.733 2.661h36.814v100.571h64.329v32.249H182.733V2.661zM322.002 69.453v-.377C322.002 30.936 352.743 0 393.731 0s71.339 30.559 71.339 68.699v.377c0 38.14-30.741 69.063-71.716 69.063-40.988.001-71.352-30.545-71.352-68.686zm105.5 0v-.377c0-19.168-13.849-35.864-34.148-35.864-20.117 0-33.589 16.32-33.589 35.487v.377c0 19.168 13.849 35.864 33.966 35.864 20.299.001 33.771-16.319 33.771-35.487zM510.127 77.232V2.655h37.386v73.822c0 19.168 9.675 28.27 24.473 28.27 14.798 0 24.473-8.726 24.473-27.32V2.653h37.386v73.627c0 42.887-24.473 61.664-62.236 61.664-37.763.002-61.482-19.153-61.482-60.713zM690.182 2.667h51.235c47.438 0 74.954 27.321 74.954 65.643v.39c0 38.322-27.893 66.788-75.708 66.788h-50.481V2.667zm51.807 100.181c22.015 0 36.618-12.145 36.618-33.589v-.377c0-21.248-14.603-33.589-36.618-33.589h-14.994v67.555h14.994zM869.871 2.661h106.254v32.262h-69.441v22.575h62.809v30.546h-62.809v47.437h-36.813V2.661zM1027.35 2.661h36.81v100.571h64.33v32.249h-101.14V2.661zM1224.69 1.712h35.47l56.56 133.77h-39.47l-9.69-23.719h-51.24l-9.48 23.719h-38.71l56.56-133.77zm32.25 81.404l-14.8-37.763-14.99 37.763h29.79zM1364.13 2.658h62.81c20.31 0 34.34 5.319 43.26 14.42 7.79 7.595 11.77 17.842 11.77 30.937v.377c0 20.299-10.82 33.771-27.32 40.793l31.69 46.307h-42.51l-26.75-40.234h-16.14v40.234h-36.81V2.658zm61.11 63.757c12.52 0 19.74-6.073 19.74-15.748v-.377c0-10.442-7.6-15.748-19.94-15.748h-24.09v31.872l24.29.001zM102.133 85.025c-5.15 11.626-16.008 19.909-30.416 19.909-20.117 0-33.966-16.697-33.966-35.864v-.377c0-19.168 13.472-35.487 33.589-35.487 15.162 0 26.71 9.324 31.586 22.015h38.803C135.513 23.609 107.737.007 71.716.007 30.728.007 0 30.93 0 69.07v.377c0 38.14 30.351 68.699 71.339 68.699 35.058 0 62.457-22.705 69.688-53.121h-38.894zM1687.74 32.802c-7.96 0-14.41-6.436-14.41-14.396 0-7.921 6.45-14.357 14.41-14.357 7.95 0 14.4 6.436 14.4 14.357 0 7.96-6.45 14.396-14.4 14.396zm0-26.095c-6.37 0-11.54 5.25-11.54 11.699 0 6.488 5.17 11.739 11.54 11.739 6.36 0 11.53-5.25 11.53-11.74 0-6.448-5.17-11.698-11.53-11.698zM1695.01 26h-3.41l-2.87-5.524h-3.85v5.485h-2.99v-15.83h7.6c3.33 0 5.44 2.034 5.44 5.173 0 2.267-1.31 4.091-3.29 4.807l3.37 5.889zm-5.48-8.273c1.24 0 2.46-.638 2.46-2.423 0-1.798-.95-2.423-2.46-2.423h-4.65v4.846h4.65zM1535.03 2.574h107.03v31.372h-70.52v20.142h63.88V83.18h-63.88v21.106h71.47v31.359h-107.98V2.574z" fill="#222" />
+			</symbol>
+		</svg>
+
+		<nav class="ac">
+			<div class="box">
+				<a href="/">HOME</a>
+			</div>
+		</nav>
+
+		<header class="intro">
+			<div class="box grid ac">
+				<div>
+					<h1>Developer Challenge</h1>
+					<p>The “Unconference” has arrived. While supplies last, we’re giving away our most <b>popular conference swag</b>! To receive a swag box, you must complete our developer challenge: <b>build a collaborative application</b> using Cloudflare’s developer platform: Workers, Workers KV, Pages, and Durable Objects.</p>
+					<span>
+						<a href="#signup" class="btn pri">Sign Up</a>
+						<a href="#faq" class="btn">Learn More</a>
+					</span>
+				</div>
+
+				<!-- TODO: inline -->
+				<img src="/scene.svg"/>
+			</div>
+		</header>
+
+		<header role="banner" class="ac">
+			<span class="box tac">
+				100+ Prizes Remaining
+			</span>
+		</header>
+
+		<section class="prize">
+			<div class="box grid gap">
+				<figure>
+					<svg><use href="#img"/></svg>
+				</figure>
+
+				<div class="card">
+					<h3>Swag Prize Preview</h3>
+					<p>The swag box will include prizes such as a Cloudflare <b>baseball cap</b>, <b>socks</b>, <b>mug</b>, <b>t-shirt</b>, <b>key cap</b>, <b>stickers</b>, and more!</p>
+				</div>
+			</div>
+		</section>
+
+		<section class="signup tac box">
+			<a name="signup"></a>
+
+			<h2>Sign Up</h2>
+			<p>Enroll into this year’s Developer Challenge now!</p>
+			<p>Registration is free and instant. Simply fll out the form below.</p>
+
+			<form action="/signup" class="grid">
+				<label for="fname">
+					<input id="fname" name="fname" type="text" required/>
+					<span>First Name</span>
+				</label>
+
+				<label for="lname">
+					<input id="lname" name="lname" type="text" required/>
+					<span>Last Name</span>
+				</label>
+
+				<label for="email">
+					<input id="email" name="email" type="email" required/>
+					<span>Email Address</span>
+				</label>
+
+				<button type="submit" class="btn pri">Submit</button>
+			</form>
+		</section>
+
+		<section class="faq box">
+			<h2>FAQ</h2>
+			<small>Common questions about the Developer Challenge</small>
+
+			<details open>
+				<summary>What is required for me to be eligible to receive a swag box?</summary>
+				<p>You must successfully complete the challenge by building a collaborative application using Cloudflare Workers, Workers KV, Durable Objects, and Cloudflare Pages. You must complete the submissions form with all necessary information, before prizes run out. Swag will be sent on a first come, first serve basis. Successful completion is subject to approval of the Cloudflare staff. We also encourage you to share what you built on Cloudflare’s Discord server, and our Twitter by tagging <a href="https://twitter.com/CloudflareDev">@CloudflareDev</a>.</p>
+			</details>
+
+			<details>
+				<summary>Do I have to pay to participate?</summary>
+				<p>No, you can get started with Cloudflare’s developer products for free.</p>
+			</details>
+
+			<details>
+				<summary>What are the products in Cloudflare’s developer platform?</summary>
+				<p>Cloudflare’s developer platform includes:</p>
+				<ul>
+					<li><a href="https://workers.cloudflare.com/">Cloudflare Workers</a> is a serverless platform that allows you to deploy code instantly across the globe.</li>
+					<li><a href="https://developers.cloudflare.com/workers/runtime-apis/kv">Workers KV</a> is a global, low-latency, key-value data store.</li>
+					<li><a href="https://developers.cloudflare.com/workers/runtime-apis/durable-objects">Durable Objects</a> provide low-latency coordination and consistent storage for the Workers platform.</li>
+					<li><a href="https://pages.cloudflare.com/">Cloudflare Pages</a> is a JAMstack platform for frontend developers to collaborate and deploy websites.</li>
+				</ul>
+			</details>
+
+			<details>
+				<summary>How many Cloudflare products do I need to use to receive the swag box?</summary>
+				<p>You must at least use all four of Cloudflare’s developer products in some way: Workers, Workers KV, Durable Objects, and Pages.</p>
+			</details>
+
+			<details>
+				<summary>What are some examples of collaborative applications I could build?</summary>
+				<p>A grocery list, an interactive game, a chat room, a remote whiteboard, etc.</p>
+			</details>
+
+			<details>
+				<summary>How long will it take to receive my swag box?</summary>
+				<p>Delivery times will vary based on location. The box may take several weeks to arrive.</p>
+			</details>
+
+			<details>
+				<summary>How will I know if my submission has been approved to receive the prizes?</summary>
+				<p>Our team will be in touch with you following your submission. We will send you an email with additional information about the swag box, and a link to the vendor site so you can select the proper sizing, etc.</p>
+			</details>
+		</section>
+
+		<footer>
+			<div class="box">
+				<div>logo</div>
+
+				<ul>
+					<dt>Product</dt>
+					<li>Cloudflare Pages</li>
+					<li>Cloudflare Workers</li>
+					<li>Announcement</li>
+					<li>Pricing</li>
+				</ul>
+
+				<ul>
+					<dt>Docs</dt>
+					<li>Getting Started</li>
+					<li>Deployment Setup</li>
+					<li>Migrating</li>
+					<li>Tutorial</li>
+				</ul>
+
+				<ul>
+					<dt>Help</dt>
+					<li>Cloudflare Status</li>
+					<li>Discord</li>
+					<li>Support</li>
+					<li>Twitter</li>
+				</ul>
+			</div>
+
+			<div class="copy">
+				© 2021 Cloudflare, Inc. · Privacy · Terms
+			</div>
+		</footer>
+	</body>
+</html>
