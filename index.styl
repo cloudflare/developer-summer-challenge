@@ -12,11 +12,18 @@ $blue3 = #1855dc
 // ---
 
 *
-	padding 0
 	margin 0
+	outline none
+	padding 0
 
 *, *:after, *:before
 	box-sizing border-box
+
+*:focus
+	// box-shadow 0 0 0 2px $orange2
+	box-shadow \
+		0 0 0 2px var(--bg, $white), \
+		0 0 0 4px $orange
 
 html
 	font-size 16px
@@ -309,10 +316,11 @@ $pkg-transition = 650ms
 	position relative
 
 details
+	--bg $gray
 	display flex
 	overflow hidden
-	border-radius 5px
-	background rgba(0, 0, 0, .05)
+	border-radius 2px 1rem 1rem 2px
+	background $gray
 	border-left 4px solid transparent
 	transition border-color 250ms
 	line-height 1.75
