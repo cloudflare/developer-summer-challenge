@@ -1,7 +1,7 @@
 $gray = #F3F3F4
 $white = #FFFFFF
 $orange = #F78100
-$black = #1D1F20
+$black = #1D1F20 // 404041
 
 $blue1 = #E2F5FA
 $blue2 = #6ECCE5
@@ -186,16 +186,113 @@ header[role=banner]
 .prize
 	background-color #EAECF4
 	background-color $blue2
+	background-color #CFE7F1
+	background-color #e7f3f8
 
 .card
 	padding 3rem
 	max-width 26rem
 	border-radius 1rem
 	background-color $gray
+	background-color #F8FBFB
 	position absolute
 	line-height 2
 	bottom -8rem
 	right 0
+
+// ---
+// PACKAGE
+// ---
+
+$pkg-height = 6rem
+$pkg-depth = 2 * $pkg-height
+$pkg-length = 2.4 * $pkg-height
+$pkg-icon-size = 1.8 * $pkg-length
+$pkg-transition = 650ms
+
+.scene
+	height $pkg-depth
+	width $pkg-length
+	border 1px solid $blue1
+	border-color $blue3
+	border-radius 0.5rem
+	perspective 400px
+	margin 4rem 0
+
+.pkg
+	position relative
+	will-change transform
+	transform-style preserve-3d
+	transition transform $pkg-transition
+	transform \
+		translate3d(-72px, 12px, -150px) \
+		rotateY(38deg) rotateX(68deg)
+
+// rotateY(25deg) rotateX(72deg)
+
+.face
+	overflow hidden
+	position absolute
+	background-color $white
+	border 2px solid $black
+
+.face.h, .face.a
+	width $pkg-length
+	height $pkg-depth
+
+.face.h
+	transform-origin top
+	will-change transform
+	transition transform ($pkg-transition - 200ms) ease-out 25ms
+
+.face.a
+	transform rotateY(180deg) translateZ($pkg-height)
+
+.face.r, .face.l
+	width $pkg-height
+	height $pkg-depth
+	transform-origin left
+	transform rotateY(-90deg) translateX(-1 * $pkg-height)
+
+.face.r
+	left $pkg-length
+
+.face.t, .face.b
+	transform-origin top
+	width $pkg-length
+	height $pkg-height
+
+.face.t
+	transform rotateX(-90deg)
+
+.face.b
+	transform translateY($pkg-depth) rotateX(-90deg)
+	text-align center
+
+.face svg
+	height $pkg-depth
+	min-width $pkg-icon-size
+	float right
+
+// text
+.face.b svg
+	width 55%
+	float none
+	min-width 0
+	height 100%
+
+// icons
+.face.l svg
+	transform translateX($pkg-length)
+.face.a svg
+	transform translateX($pkg-length + $pkg-height)
+
+.scene:hover .pkg
+	transform translateZ(-50px) rotateY(28deg) rotateX(48deg) rotateZ(12deg)
+	transform translateZ(-50px) rotateY(30deg) rotateX(48deg) rotateZ(10deg)
+
+.scene:hover .face.h
+	transform rotateY(0deg) rotateX(58deg)
 
 // ---
 // SIGNUP FORM
@@ -235,8 +332,6 @@ summary::after
 	position absolute
 	transition all 250ms ease-in-out
 	background transparent url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' stroke='%231D1F20'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M12 6v6m0 0v6m0-6h6m-6 0H6'/%3E%3C/svg%3E") center no-repeat
-	// transform translateY(-50%)
-	// top 50%
 	top (1.8rem / 2)
 	height 1.8rem
 	width 1.8rem
