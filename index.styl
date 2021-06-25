@@ -111,10 +111,11 @@ form.grid
 	gap 1.5rem
 
 label
-	width 100%
-	display block
-	text-align left
+	--bb #7C8794
+	position relative
 	padding-top 1.5rem
+	text-align left
+	width 100%
 
 label > span
 	color #3C434A
@@ -129,10 +130,20 @@ label > input
 input
 	width 100%
 	color #3C434A
-	padding 0.5rem 0
+	padding 0.25rem 0.5rem
+	border-radius 0.5rem 0.5rem 0 0
+	transition border-color 200ms linear
 	border-bottom 1px solid #7C8794
 	line-height 2rem
 	font-size 1rem
+
+input:hover,
+label:hover > input
+	border-color $orange1
+
+input:focus
+	box-shadow none
+	border-color $orange2
 
 form label:last-of-type
 	grid-column 1/3
