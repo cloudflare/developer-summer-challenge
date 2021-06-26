@@ -8,6 +8,7 @@ $orange2 = #F78100
 $blue1 = #E2F5FA
 $blue2 = #6ECCE5
 $blue3 = #1855dc
+$blue4 = #093682
 
 // ---
 // ROOT
@@ -96,9 +97,18 @@ button
 	text-decoration none
 	padding 0.75rem 1.5rem
 	background-color $gray
+	transition all 250ms ease-in-out
 	display inline-block
 	text-align center
 	color $black
+	box-shadow \
+		rgba($blue4, 0.25) 0px 2px 5px -1px, \
+		rgba($black, 0.3) 0px 1px 3px -1px
+
+.btn:hover
+	box-shadow \
+		rgba($blue4, 0.25) 0px 6px 12px -2px, \
+		rgba($black, 0.3) 0px 3px 7px -3px
 
 .btn.pri
 	background-color $orange2
@@ -216,6 +226,9 @@ header[role=banner]
 	border-radius 1rem
 	background-color $gray
 	background-color #F8FBFB
+	box-shadow \
+		rgba($blue4, 0.25) 0px 2px 5px -1px, \
+		rgba($black, 0.3) 0px 1px 3px -1px
 	position absolute
 	line-height 2
 	bottom -8rem
