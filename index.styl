@@ -431,3 +431,73 @@ footer .copy
 	font-size 0.75rem
 	margin 5rem auto 0
 	text-align center
+
+// ---
+// PKG CONTENTS
+// ---
+
+$pkg-icon-size = 8rem
+$pkg-icon-gutter = 1rem
+
+$pkg-icon-delay-base = 300ms
+$pkg-icon-delay-step = 150ms
+
+.scene figure
+	height $pkg-icon-size
+	width $pkg-icon-size
+	position absolute
+	background-color $blue1
+	border 4px solid $blue2
+	transform translateZ(-4rem)
+	transition-property transform
+	transition-timing-function cubic-in-out
+	transition-duration var(--ms)
+	transition-delay var(--w)
+	border-radius 50%
+	display flex
+	justify-content center
+	align-items center
+	padding 1rem
+	padding-left var(--l, 1rem)
+
+.scene figure svg
+	width 100%
+	height 100%
+
+.scene:hover figure
+	// unset / revert `.scene:hover .pkg` transformation
+	transform \
+		rotateZ(-10deg) rotateX(-48deg) rotateY(-30deg) translateZ(-50px) \
+		translate3d(var(--x), var(--y, -4rem), -8rem)
+
+// keycap (last & left-most)
+figure.k
+	--x (22rem + $pkg-icon-size*1 + $pkg-icon-gutter*0)
+	--ms ($pkg-icon-delay-base + $pkg-icon-delay-step*0)
+	--w 800ms
+
+// hat (2nd last)
+figure.h
+	--l 1.6rem
+	--x (22rem + $pkg-icon-size*2 + $pkg-icon-gutter*1)
+	--ms ($pkg-icon-delay-base + $pkg-icon-delay-step*1)
+	--w 700ms
+
+// cup (middle)
+figure.c
+	--l 1.8rem
+	--x (22rem + $pkg-icon-size*3 + $pkg-icon-gutter*2)
+	--ms ($pkg-icon-delay-base + $pkg-icon-delay-step*2)
+	--w 600ms
+
+// sticker (2nd)
+figure.s
+	--x (22rem + $pkg-icon-size*4 + $pkg-icon-gutter*3)
+	--ms ($pkg-icon-delay-base + $pkg-icon-delay-step*3)
+	--w 500ms
+
+// tshirt (1st & right-most)
+figure.t
+	--x (22rem + $pkg-icon-size*5 + $pkg-icon-gutter*4)
+	--ms ($pkg-icon-delay-base + $pkg-icon-delay-step*4)
+	--w 400ms
