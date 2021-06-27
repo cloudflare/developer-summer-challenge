@@ -2,12 +2,15 @@
   "private": true,
   "version": "0.0.0",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "serve": "vite preview"
+    "html": "node bin/html"
+  },
+  "engines": {
+    "node": ">=14"
   },
   "devDependencies": {
+    "html-minifier-terser": "5.1.1",
+    "servor": "4.0.2",
     "stylus": "0.54.8",
-    "vite": "2.3.7"
+    "watchlist": "0.2.3"
   }
 }
