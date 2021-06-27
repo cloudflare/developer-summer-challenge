@@ -3,5 +3,4 @@
 *-lock.*
 *.lock
 
-/dist
-/dist-ssr
+/build
