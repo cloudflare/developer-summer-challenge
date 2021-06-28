@@ -1,16 +1,21 @@
 {
   "private": true,
   "version": "0.0.0",
+  "main": "build/index.js",
   "scripts": {
-    "html": "node bin/html"
+    "html": "node bin/html",
+    "worker": "node bin/worker",
+    "build": "yarn html build && yarn worker build"
   },
   "engines": {
     "node": ">=14"
   },
   "devDependencies": {
+    "esbuild": "0.12.10",
     "html-minifier-terser": "5.1.1",
     "servor": "4.0.2",
     "stylus": "0.54.8",
-    "watchlist": "0.2.3"
+    "watchlist": "0.2.3",
+    "worktop": "0.7.1"
   }
 }

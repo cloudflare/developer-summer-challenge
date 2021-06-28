@@ -1,0 +1,29 @@
+name = "challenge"
+type = "javascript"
+
+# workers dx
+account_id = "<< ACCOUNT ID >>"
+workers_dev = true
+zone_id = ""
+route = ""
+
+[build]
+command = "yarn build"
+watch_dir = "worker"
+
+[build.upload]
+format = "service-worker"
+
+[vars]
+SHEET_ID = "<< SPREADSHEET ID >>"
+GTOKEN_EMAIL = "<< SERVICE ACCOUNT EMAIL >>"
+
+# [secrets]
+# SPARKPOST_KEY
+# GTOKEN_PRIVKEY
+# GTOKEN_KID
+
+[[kv_namespaces]]
+binding = "DATA"
+preview_id = "<< KV NAMESPACE ID >>"
+id = "<< KV NAMESPACE ID >>"
