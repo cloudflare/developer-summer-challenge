@@ -10,6 +10,11 @@ $blue2 = #6ECCE5
 $blue3 = #1855dc
 $blue4 = #093682
 
+$focus-ring
+	box-shadow \
+		0 0 0 2px var(--bg, $white), \
+		0 0 0 4px $orange2
+
 // ---
 // ROOT
 // ---
@@ -23,10 +28,7 @@ $blue4 = #093682
 	box-sizing border-box
 
 *:focus
-	// box-shadow 0 0 0 2px $orange2
-	box-shadow \
-		0 0 0 2px var(--bg, $white), \
-		0 0 0 4px $orange2
+	@extend $focus-ring
 
 html
 	font-size 16px
@@ -130,6 +132,9 @@ button
 	box-shadow \
 		rgba($blue4, 0.25) 0px 6px 12px -2px, \
 		rgba($black, 0.3) 0px 3px 7px -3px
+
+.btn:focus
+	@extend $focus-ring
 
 .btn.pri
 	background-color $orange2
