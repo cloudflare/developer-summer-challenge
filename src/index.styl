@@ -11,9 +11,13 @@ $blue3 = #1855dc
 $blue4 = #093682
 
 $focus-ring
-	box-shadow \
-		0 0 0 2px var(--bg, $white), \
-		0 0 0 4px $orange2
+	&:focus,
+	&:focus-visible
+		box-shadow \
+			0 0 0 2px var(--bg, $white), \
+			0 0 0 4px $orange2
+	&:focus:not(:focus-visible)
+		box-shadow none
 
 $btn-shadow1
 	box-shadow \
@@ -37,7 +41,7 @@ $btn-shadow2
 *, *:after, *:before
 	box-sizing border-box
 
-*:focus
+*
 	@extend $focus-ring
 
 html
@@ -139,7 +143,7 @@ button
 .btn:hover
 	@extend $btn-shadow2
 
-.btn:focus
+.btn
 	@extend $focus-ring
 
 .btn.pri
@@ -183,7 +187,8 @@ input:hover,
 label:hover > input
 	border-color $orange1
 
-input:focus
+input:focus,
+input:focus-visible
 	box-shadow none
 	border-color $orange2
 
@@ -198,6 +203,7 @@ label:hover + span
 	color #7C8794
 
 label input:focus + span,
+label input:focus-visible + span,
 label.fill > input + span
 	transform translateY(-4.5rem) scale(0.875)
 	color #7C8794
