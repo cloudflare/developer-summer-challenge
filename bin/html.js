@@ -1,28 +1,10 @@
 #!/usr/bin/env node
-const fs = require('fs').promises;
 const { resolve } = require('path');
 const stylus = require('stylus');
+const $ = require('./util');
 
 const input = resolve(__dirname, '../src');
 const output = resolve(__dirname, '../build');
-
-/**
- * @param {string} file
- * @returns {Promise<string>}
- */
-function read(file) {
-	file = resolve(input, file);
-	return fs.readFile(file, 'utf8');
-}
-
-/**
- * @param {string} msg
- * @returns {never}
- */
-function bail(msg) {
-	console.error('ERROR', msg);
-	process.exit(1);
-}
 
 /**
  * @param {boolean} [isProd]
@@ -31,7 +13,7 @@ function bail(msg) {
 async function styles(isProd) {
 	let filename = resolve(input, 'index.styl');
 
-	let code = await read(filename);
+	let code = await $.read(filename);
 	let ctx = stylus(code, { filename, compress: isProd });
 	if (!isProd) ctx.set('sourcemap', { inline: true });
 	return new Promise((res, rej) => {
@@ -43,10 +25,10 @@ async function styles(isProd) {
  * @param {boolean} [isProd]
  */
 async function build(isProd) {
-	let start = Date.now();
+	let timer = $.timer();
 
 	let [HTML, css] = await Promise.all([
-		read('index.html'),
+		$.read('index.html', input),
 		styles(isProd),
 	]);
 
@@ -72,22 +54,21 @@ async function build(isProd) {
 	}
 
 	let file = resolve(output, 'index.html');
-	await fs.writeFile(file, HTML);
+	await $.write(file, HTML);
 
-	let ms = Date.now() - start;
-	console.log('~> built in %dms', ms);
+	console.log('~> built in %dms', timer());
 }
 
 (async function () {
 	const [action] = process.argv.slice(2);
 
-	// remove built output; `force` => continue if missing
-	await fs.rm(output, { recursive: true, force: true });
-	await fs.mkdir(output); // ~> clean slate
+	// clean slate
+	await $.rm(output);
+	await $.mkdir(output);
 
 	const isDev = action === 'dev';
 	if (!isDev && action !== 'build') {
-		return bail(`Unknown command: "${action}"`);
+		return $.bail(`Unknown command: "${action}"`);
 	}
 
 	await build(!isDev);
@@ -115,5 +96,5 @@ async function build(isProd) {
 		});
 	}
 })().catch(err => {
-	return bail(err.stack);
+	return $.bail(err.stack);
 });
