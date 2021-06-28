@@ -10,24 +10,24 @@ function encode(input: string | object) {
 	return Base64.base64url(typeof input === 'string' ? input : JSON.stringify(input));
 }
 
-/*
-Convert a string into an ArrayBuffer
-from https://developers.google.com/web/updates/2012/06/How-to-convert-ArrayBuffer-to-and-from-String
-*/
 function str2ab(str: string) {
-	const buf = new ArrayBuffer(str.length);
-	const bufView = new Uint8Array(buf);
-	for (let i = 0, strLen = str.length; i < strLen; i++) {
-		bufView[i] = str.charCodeAt(i);
+	let i=0, len=str.length;
+	const buf = new ArrayBuffer(len);
+	const view = new Uint8Array(buf);
+	for (; i < len; i++) {
+		view[i] = str.charCodeAt(i);
 	}
 	return buf;
 }
 
+// TODO: BUG W/ SECRETS? any "\n" => "\\n"
+const PRIVATE = "-----BEGIN PRIVATE KEY-----\nREDACTED\n-----END PRIVATE KEY-----";
+
 function convert() {
 	// fetch the part of the PEM string between header and footer
-	const contents = GTOKEN_PRIVKEY.substring(
+	const contents = PRIVATE.substring(
 		'-----BEGIN PRIVATE KEY-----'.length,
-		GTOKEN_PRIVKEY.length - '-----END PRIVATE KEY-----'.length
+		PRIVATE.length - '-----END PRIVATE KEY-----'.length
 	);
 
 	return crypto.subtle.importKey(
@@ -39,7 +39,7 @@ function convert() {
 			name: 'RSASSA-PKCS1-v1_5',
 			hash: 'SHA-256',
 		},
-		true,
+		false,
 		['sign']
 	);
 }
