@@ -27,14 +27,14 @@ async function styles(isProd) {
 async function build(isProd) {
 	let timer = $.timer();
 
-	let [HTML, css] = await Promise.all([
+	let [HTML, js, css] = await Promise.all([
 		$.read('index.html', input),
+		$.read('index.js', input),
 		styles(isProd),
 	]);
 
 	if (css) css = '<style>' + css + '</style>';
-	// if (js) js = '<script defer>' + js + '</script>';
-	let js = '';
+	if (js) js = '<script defer>' + js + '</script>';
 
 	HTML = (
 		HTML
@@ -48,6 +48,7 @@ async function build(isProd) {
 			minifyCSS: false,
 			removeComments: true,
 			collapseWhitespace: true,
+			collapseBooleanAttributes: true,
 			removeAttributeQuotes: true,
 			useShortDoctype: true,
 		});
