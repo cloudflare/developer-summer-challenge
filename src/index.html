@@ -246,16 +246,16 @@
 
 			<h2>Sign Up</h2>
 			<p>Enroll into this year’s Developer Challenge now!</p>
-			<p>Registration is free and instant. Simply fll out the form below.</p>
+			<p>Registration is free and instant. Simply fill out the form below.</p>
 
-			<form action="/signup" class="grid">
+			<form method="POST" action="/signup" class="grid">
 				<label for="fname">
-					<input id="fname" name="fname" type="text" required/>
+					<input id="fname" name="firstname" type="text" minlength="1" required/>
 					<span>First Name</span>
 				</label>
 
 				<label for="lname">
-					<input id="lname" name="lname" type="text" required/>
+					<input id="lname" name="lastname" type="text" minlength="1" required/>
 					<span>Last Name</span>
 				</label>
 

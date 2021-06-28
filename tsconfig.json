@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "target": "es2019",
+    "moduleResolution": "node",
+    "forceConsistentCasingInFileNames": true,
+    "strictFunctionTypes": true,
+    "strictNullChecks": true,
+    "noImplicitThis": true,
+    "noImplicitAny": true,
+    "allowJs": false,
+  },
+  "include": [
+    "worker",
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}
