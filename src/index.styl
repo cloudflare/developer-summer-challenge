@@ -62,10 +62,31 @@ body
 .tac
 	text-align center
 
-nav
+nav,
+nav .box
 	display flex
 	border-bottom 1px solid $gray
 	height 5rem
+
+nav .box
+	justify-content space-between
+
+.logo
+	display flex
+	padding 0.5rem
+	align-items baseline
+	border-radius 0.25rem
+	text-decoration none
+	height 3.75rem
+
+.logo .ico
+	height 2.75rem
+	width 4rem
+
+.logo .txt
+	width 8rem
+	height 1.55rem
+	margin-left 4px
 
 section
 	padding 4rem 0
