@@ -10,6 +10,8 @@ $blue2 = #6ECCE5
 $blue3 = #1855dc
 $blue4 = #093682
 
+$selection = rgba($orange1, 0.3)
+
 $focus-ring
 	&:focus,
 	&:focus-visible
@@ -43,6 +45,9 @@ $btn-shadow2
 
 *
 	@extend $focus-ring
+
+::selection
+	background-color $selection
 
 html
 	font-size 16px
@@ -90,6 +95,7 @@ nav .box
 .logo
 	display flex
 	padding 0.5rem
+	position relative
 	align-items baseline
 	border-radius 0.25rem
 	text-decoration none
@@ -449,6 +455,8 @@ details ul
 // FOOTER
 // ---
 
+$footer-link-padding = 0.5rem
+
 footer
 	padding 3rem 0
 	box-shadow inset 0px 2.125px 8.5px -8.5px #1D1F20
@@ -466,12 +474,41 @@ footer dt
 footer li
 	color $black
 	list-style none
-	margin-bottom 1rem
+	margin-bottom (2 * $footer-link-padding)
+	margin-left (-1 * $footer-link-padding)
+
+footer a
+	border-radius 4px
+	text-decoration none
+	padding $footer-link-padding
+	transition color 150ms linear
+	color currentColor
 
 footer .copy
 	font-size 0.75rem
 	margin 5rem auto 0
 	text-align center
+footer .copy a
+	padding 0.125rem
+
+footer a:hover,
+footer a:focus
+	color $orange2
+
+footer .logo::after
+	content ''
+	width 3.75rem
+	height 3.75rem
+	position absolute
+	border 4px solid $gray
+	transition border-color 250ms
+	border-radius 4px
+	left 1.15rem
+	top 0.15rem
+	z-index -1
+
+footer .logo:hover::after
+	border-color $selection
 
 // ---
 // PKG CONTENTS
