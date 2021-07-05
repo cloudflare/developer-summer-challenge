@@ -1,5 +1,6 @@
 import { Router } from 'worktop';
 import * as Cache from 'worktop/cache';
+import * as Sparkpost from './emails';
 import * as Signup from './signup';
 import * as Sheets from './sheet';
 import * as utils from './utils';
@@ -74,6 +75,11 @@ API.add('POST', '/signup', async (req, res) => {
 	let isOK = await Signup.save(entry);
 	if (!isOK) return toError(res, 500, 'Error persisting entry');
 
+	// TODO: finish template
+	let sent = await Sparkpost.confirm(entry);
+	if (!sent) return toError(res, 500, 'Error sending confirmation email');
+
+	// TODO: send down success markup
 	return res.end('OK');
 });
 
