@@ -42,10 +42,9 @@ async function send(
 	return res.ok && data.results.total_accepted_recipients === 1;
 }
 
-
 export function confirm(entry: Entry): Promise<boolean> {
 	return send('devchallenge-confirm', entry, {
 		firstname: entry.firstname,
-		code: 'abc123', // TODO
+		code: entry.code,
 	});
 }

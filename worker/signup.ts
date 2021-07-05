@@ -1,3 +1,4 @@
+import { uid } from 'worktop/utils';
 import { read, write } from './utils';
 
 // Status
@@ -17,6 +18,7 @@ export interface Entry {
 	created_at: DATETIME;
 	last_update: DATETIME;
 	range?: string;
+	code: string;
 }
 
 const toKey = (email: string) => `user:${email}`;
@@ -27,6 +29,7 @@ export function prepare(values: Pick<Entry, 'email'|'firstname'|'lastname'>): En
 	return {
 		...values,
 		link: null,
+		code: uid(64),
 		status: SIGNUP,
 		created_at: timestamp,
 		last_update: timestamp,
