@@ -221,6 +221,7 @@ label.fill > input + span
 // ---
 
 .intro
+	overflow hidden
 	position relative
 	padding 4rem 0 8.5rem
 
@@ -233,7 +234,7 @@ label.fill > input + span
 	content ''
 
 .intro svg
-	bottom -8.5rem
+	bottom -9rem
 	position relative
 	margin-left 10rem
 	pointer-events none
@@ -308,12 +309,6 @@ $pkg-transition = 650ms
 	position relative
 	will-change transform
 	transform-style preserve-3d
-	transition transform $pkg-transition
-	transform \
-		translate3d(-72px, 12px, -150px) \
-		rotateY(38deg) rotateX(68deg)
-
-// rotateY(25deg) rotateX(72deg)
 
 .face
 	overflow hidden
@@ -372,12 +367,6 @@ $pkg-transition = 650ms
 .face.a svg
 	transform translateX($pkg-length + $pkg-height)
 
-.scene:hover .pkg
-	transform translateZ(-50px) rotateY(28deg) rotateX(48deg) rotateZ(12deg)
-	transform translateZ(-50px) rotateY(30deg) rotateX(48deg) rotateZ(10deg)
-
-.scene:hover .face.h
-	transform rotateY(0deg) rotateX(58deg)
 
 // ---
 // SIGNUP FORM
@@ -582,12 +571,6 @@ $pkg-icon-delay-step = 150ms
 	width 100%
 	height 100%
 
-.scene:hover figure
-	// unset / revert `.scene:hover .pkg` transformation
-	transform \
-		rotateZ(-10deg) rotateX(-48deg) rotateY(-30deg) translateZ(-50px) \
-		translate3d(var(--x), var(--y, -4rem), -8rem)
-
 // keycap (last & left-most)
 figure.k
 	--x (22rem + $pkg-icon-size*1 + $pkg-icon-gutter*0)
@@ -619,3 +602,86 @@ figure.t
 	--x (22rem + $pkg-icon-size*5 + $pkg-icon-gutter*4)
 	--ms ($pkg-icon-delay-base + $pkg-icon-delay-step*4)
 	--w 400ms
+
+
+// ---
+// MOBILE STYLES
+// ---
+@media screen and (max-width: 1025px)
+	.intro svg
+		margin-left 0
+		position absolute
+		bottom -7rem
+		right -10rem
+
+@media screen and (min-width: 769px)
+	.pkg
+		animation none
+		transition transform $pkg-transition
+		transform \
+			translate3d(-72px, 12px, -150px) \
+			rotateY(38deg) rotateX(68deg)
+	.scene:hover .pkg
+		transform translateZ(-50px) rotateY(28deg) rotateX(48deg) rotateZ(12deg)
+		transform translateZ(-50px) rotateY(30deg) rotateX(48deg) rotateZ(10deg)
+	.scene:hover .face.h
+		transform rotateY(0deg) rotateX(58deg)
+	.scene:hover figure
+		// unset / revert `.scene:hover .pkg` transformation
+		transform \
+			rotateZ(-10deg) rotateX(-48deg) rotateY(-30deg) translateZ(-50px) \
+			translate3d(var(--x), var(--y, -4rem), -8rem)
+
+@media screen and (max-width: 769px)
+	html
+		font-size 14px
+	.intro
+		padding-bottom 0
+	.intro::after
+		height 3rem
+	.intro svg
+		width 94%
+		right auto
+		position relative
+		max-width 37.5rem
+		margin-top 8rem
+		bottom 0.8rem
+	.box
+		padding-left 1rem
+		padding-right 1rem
+	.grid
+		grid-template-columns 1fr
+	.scene
+		margin 0
+	.card
+		padding 3rem 2rem
+		position relative
+		margin-top -4rem
+		right auto
+	form label:last-of-type
+		grid-column 1/2
+	.signup .btn
+		width 100%
+	details
+		border-top-right-radius 0.8rem
+		border-bottom-right-radius 0.8rem
+	summary
+		padding-right 2rem
+	summary::after
+		top 0.5rem
+		right 0.5rem
+	footer .box
+		padding 0 2rem
+		grid-template-columns 1fr 1fr
+		grid-gap 4rem 2rem
+		gap 4rem 2rem
+	footer li
+		padding-left 0.75rem
+		margin-bottom 0.75rem
+
+@media screen and (max-width: 441px)
+	.box
+		padding-left 0.5rem
+		padding-right 0.5rem
+	.intro svg
+		bottom 1.2rem
