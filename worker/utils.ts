@@ -12,13 +12,36 @@ export function write<T>(key: string, value: T, options?: DB.Options.Write): Pro
 	return DB.write<T>(DATA, key, value, { ...options, toJSON: true });
 }
 
+export function remove(key: string): Promise<boolean> {
+	return DB.remove(DATA, key);
+}
+
 export function toCount(): Promise<string> {
-	return DB.read(DATA, 'prizes:count', 'text').then(v => v || '300+');
+	return DB.read(DATA, '::remain', 'text').then(v => v || '300+');
 }
 
 // @see https://stackoverflow.com/a/32686261
 export function isEmail(value: string): boolean {
 	return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+}
+
+type ErrorMessages<R> = { [K in keyof R]?: string };
+type Validator<T> = (value: any, input: T) => string | boolean;
+type Validity<R> = { invalid: boolean; errors: ErrorMessages<R> };
+export function validate<
+	T extends Record<string, any>,
+	R extends Record<string, Validator<T>>,
+>(input: T, rules: R): Validity<R> {
+	let tmp, invalid = false;
+	let errors: ErrorMessages<R> = {};
+	for (let key in rules) {
+		tmp = rules[key](input[key], input);
+		if (tmp !== true) {
+			errors[key] = tmp || 'Required';
+			invalid = true;
+		}
+	}
+	return { invalid, errors };
 }
 
 export function render(res: ServerResponse, template: string, values: Record<string, string> = {}) {

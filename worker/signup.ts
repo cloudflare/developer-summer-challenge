@@ -1,38 +1,28 @@
 import { uid } from 'worktop/utils';
 import { read, write } from './utils';
 
-// Status
-const SIGNUP = 1;
-const CONFIRM = 2;
-const SUBMIT = 3;
-const AWARD = 4;
-
 type DATETIME = number; // seconds
 
 export interface Entry {
 	email: string;
 	firstname: string;
 	lastname: string;
-	status: 1 | 2 | 3 | 4;
-	link: string | null;
-	created_at: DATETIME;
-	last_update: DATETIME;
-	range?: string;
 	code: string;
+	created_at: DATETIME;
+	submit_at?: DATETIME;
+	projecturl?: string;
+	demourl?: string;
+	cftv?: boolean;
+	row?: string;
 }
 
 const toKey = (email: string) => `user:${email}`;
 
 export function prepare(values: Pick<Entry, 'email'|'firstname'|'lastname'>): Entry {
-	let timestamp = Date.now() / 1e3 | 0;
-
 	return {
 		...values,
-		link: null,
 		code: uid(64),
-		status: SIGNUP,
-		created_at: timestamp,
-		last_update: timestamp,
+		created_at: Date.now() / 1e3 | 0,
 	};
 }
 
@@ -44,17 +34,4 @@ export function find(email: string): Promise<Entry|null> {
 export function save(entry: Entry): Promise<boolean> {
 	let key = toKey(entry.email);
 	return write<Entry>(key, entry);
-}
-
-export function confirm(user: Entry): Promise<boolean> {
-	user.last_update = Date.now() / 1e3 | 0;
-	user.status = CONFIRM;
-	return save(user);
-}
-
-export function submit(user: Entry, link: string): Promise<boolean> {
-	user.last_update = Date.now() / 1e3 | 0;
-	user.status = SUBMIT;
-	user.link = link;
-	return save(user);
 }
