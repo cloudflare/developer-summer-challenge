@@ -20,6 +20,14 @@ async function authenticate(): Promise<string> {
 	}
 }
 
+interface UpdateValuesResponse {
+	updatedRange: string;
+	spreadsheetId: string;
+	updatedColumns: number;
+	updatedCells: number;
+	updatedRows: number;
+}
+
 async function send<T>(method: string, pathname: string, body: T) {
 	let token = await authenticate();
 
@@ -36,17 +44,35 @@ async function send<T>(method: string, pathname: string, body: T) {
 	});
 }
 
-function toStatus(code: number): string {
-	if (code === 1) return 'SIGNUP';
-	if (code === 2) return 'CONFIRM';
-	if (code === 3) return 'SUBMIT';
-	if (code === 4) return 'AWARD';
-	return '' + code;
-}
+const APPEND = 'Sheet1!A1:J1'; // special pattern
+const toRange = (row: string) => `Sheet1!A${row}:J${row}`;
 
 // @see https://stackoverflow.com/a/45231836
-function toDate(seconds: number): string {
-	return `=${seconds}/86400+date(1970,1,1)`;
+const toDate = (seconds: number) => `=${seconds}/86400+date(1970,1,1)`;
+
+function toRowValues(entry: Entry, range?: string): Array<string|null> {
+	let isDone = !!entry.submit_at;
+	return [
+		/* A */ entry.firstname,
+		/* B */ entry.lastname,
+		/* C */ entry.email,
+		/* D */ isDone ? 'SUBMIT' : 'SIGNUP',
+		/* E */ toDate(entry.created_at),
+		/* F */ isDone ? toDate(entry.submit_at!) : null,
+		/* G */ entry.projecturl || null,
+		/* H */ entry.demourl || null,
+		/* I */ isDone ? String(+!!entry.cftv) : null,
+	];
+}
+
+function action(method: 'POST'|'PUT', entry: Entry, range: string) {
+	let pathname = `/values/${range}`;
+	if (method === 'POST') pathname += ':append';
+	return send(method, `${pathname}?valueInputOption=USER_ENTERED`, {
+		range: range,
+		majorDimension: 'ROWS',
+		values: [ toRowValues(entry, range) ],
+	});
 }
 
 /**
@@ -54,39 +80,23 @@ function toDate(seconds: number): string {
  * @example https://developers.google.com/sheets/api/samples/writing#append_values
  */
 export async function append(entry: Entry): Promise<string | void> {
-	const range = 'Sheet1!A1:H1';
-
-	// firstname|lastname|email|status|created_at|last_update|project_link
-	let res = await send('POST', `/values/${range}:append?valueInputOption=USER_ENTERED`, {
-		range: range,
-		majorDimension: 'ROWS',
-		values: [
-			[
-				entry.firstname, // A
-				entry.lastname, // B
-				entry.email, // C
-				toStatus(entry.status), // D
-				toDate(entry.created_at), // E
-				toDate(entry.last_update || entry.created_at), // F
-				null, // G – project comes later
-			]
-		],
-	});
+	let res = await action('POST', entry, APPEND);
 
 	let data = await res.json() as {
-		spreadsheetId: string;
 		tableRange: string;
-		updates: {
-			updatedRange: string;
-			spreadsheetId: string;
-			updatedColumns: number;
-			updatedCells: number;
-			updatedRows: number;
-		}
+		spreadsheetId: string;
+		updates: UpdateValuesResponse;
 	};
 
 	if (res.ok) {
-		// eg => "Sheet1!A3:F3"
-		return data.updates.updatedRange;
+		// eg: "Sheet1!A3:F3" => ["Sheet1!A3:F", "3"]
+		return data.updates.updatedRange.split(/[:][a-z]/i)[1];
 	}
+}
+
+/**
+ * @see https://developers.google.com/sheets/api/reference/rest/v4/spreadsheets.values/update
+ */
+export function update(entry: Entry): Promise<boolean> {
+	return action('PUT', entry, toRange(entry.row!)).then(r => r.ok);
 }
