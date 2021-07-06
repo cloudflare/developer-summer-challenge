@@ -13,7 +13,7 @@
 			inputs[i].oninput = oninput;
 		}
 
-		$('.signup form').onsubmit = async function (ev) {
+		$('form').onsubmit = async function (ev) {
 			ev.preventDefault();
 
 			var form = ev.target;
