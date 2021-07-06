@@ -1,0 +1,78 @@
+$gray = #F3F3F4
+$white = #FFFFFF
+$black = #1D1F20 // 404041
+
+$orange1 = #FAAE40 // #FBAD41
+$orange2 = #F78100
+
+$blue1 = #E2F5FA
+$blue2 = #6ECCE5
+$blue3 = #1855dc
+$blue4 = #093682
+
+$selection = rgba($orange1, 0.3)
+
+$focus-ring
+	&:focus,
+	&:focus-visible
+		box-shadow \
+			0 0 0 2px var(--bg, $white), \
+			0 0 0 4px $orange2
+	&:focus:not(:focus-visible)
+		box-shadow none
+
+$btn-shadow1
+	box-shadow \
+		rgba($blue4, 0.25) 0px 2px 5px -1px, \
+		rgba($black, 0.3) 0px 1px 3px -1px
+
+$btn-shadow2
+	box-shadow \
+		rgba($blue4, 0.25) 0px 6px 12px -2px, \
+		rgba($black, 0.3) 0px 3px 7px -3px
+
+// ---
+// ROOT
+// ---
+
+*
+	margin 0
+	outline none
+	padding 0
+
+*, *:after, *:before
+	box-sizing border-box
+
+*
+	@extend $focus-ring
+
+::selection
+	background-color $selection
+
+html
+	font-size 16px
+
+body
+	line-height 1.4
+	font-family -apple-system,BlinkMacSystemFont,"Segoe UI","Roboto","Oxygen","Ubuntu","Cantarell","Fira Sans","Droid Sans","Helvetica Neue",sans-serif
+	overflow-x hidden
+	color $black
+	width 100vw
+
+[hidden]
+	display none
+
+section
+	padding 4rem 0
+
+b
+	color $orange2
+
+h1
+	font-size 2.4rem
+	margin-bottom 1.5rem
+	line-height 1.2
+
+h2
+	font-size 2rem
+	margin-bottom 1rem
