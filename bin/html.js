@@ -1,20 +1,28 @@
 #!/usr/bin/env node
-const { resolve } = require('path');
+const { existsSync } = require('fs');
+const { resolve, dirname } = require('path');
 const stylus = require('stylus');
 const $ = require('./util');
 
 const input = resolve(__dirname, '../src');
 const output = resolve(__dirname, '../build');
 
+const PAGES = [
+	'index.html',
+	'confirm/index.html'
+];
+
 /**
+ * @param {string} file
  * @param {boolean} [isProd]
  * @returns {Promise<string>}
  */
-async function styles(isProd) {
-	let filename = resolve(input, 'index.styl');
+async function styles(file, isProd) {
+	let paths = [input];
+	let filename = resolve(input, file);
 
 	let code = await $.read(filename);
-	let ctx = stylus(code, { filename, compress: isProd });
+	let ctx = stylus(code, { filename, paths, compress: isProd });
 	if (!isProd) ctx.set('sourcemap', { inline: true });
 	return new Promise((res, rej) => {
 		ctx.render((err, css) => err ? rej(err) : res(css));
@@ -22,25 +30,34 @@ async function styles(isProd) {
 }
 
 /**
+ * @param {string} html
  * @param {boolean} [isProd]
  */
-async function build(isProd) {
-	let timer = $.timer();
+async function build(html, isProd) {
+	let tmp, timer = $.timer();
+	let HTML = await $.read(html, input);
 
-	let [HTML, js, css] = await Promise.all([
-		$.read('index.html', input),
-		$.read('index.js', input),
-		styles(isProd),
-	]);
+	while (tmp = /<!--\s*inject:([^\s-]+)\s*-->/g.exec(HTML)) {
+		let file = tmp[1];
+		let content = '';
 
-	if (css) css = '<style>' + css + '</style>';
-	if (js) js = '<script defer>' + js + '</script>';
+		if (/\.styl(us)?$/.test(file)) {
+			let css = await styles(file, isProd);
+			content = css && ('<style>' + css + '</style>');
+		} else if (/\.js$/.test(file)) {
+			let js = await $.read(file, input);
+			content = js && ('<script defer>' + js + '</script>');
+		} else {
+			return console.warn('Unknown "%s" file extension', file);
+		}
 
-	HTML = (
-		HTML
-			.replace('<!-- INJECT:STYLES -->', css||'')
-			.replace('<!-- INJECT:SCRIPTS -->', js||'')
-	);
+		if (content) {
+			HTML = tmp.input.substring(0, tmp.index) + content;
+			HTML += tmp.input.substring(tmp.index + tmp[0].length);
+		} else {
+			return console.warn('Invalid "%s" content', file);
+		}
+	}
 
 	if (isProd) {
 		HTML = require('html-minifier-terser').minify(HTML, {
@@ -54,28 +71,39 @@ async function build(isProd) {
 		});
 	}
 
-	let file = resolve(output, 'index.html');
+	let file = resolve(output, html);
+	let dir = dirname(file);
+
+	existsSync(dir) || await $.mkdir(dir);
 	await $.write(file, HTML);
 
-	console.log('~> built in %dms', timer());
+	console.log('~> built "%s" in %dms', html, timer());
+}
+
+async function compile(isProd) {
+	// clean slate
+	await $.rm(output);
+	await $.mkdir(output);
+
+	await Promise.all(
+		PAGES.map(file => {
+			return build(file, isProd);
+		})
+	);
 }
 
 (async function () {
 	const [action] = process.argv.slice(2);
-
-	// clean slate
-	await $.rm(output);
-	await $.mkdir(output);
 
 	const isDev = action === 'dev';
 	if (!isDev && action !== 'build') {
 		return $.bail(`Unknown command: "${action}"`);
 	}
 
-	await build(!isDev);
+	await compile(!isDev);
 
 	if (isDev) {
-		const builder = build.bind(0, false);
+		const builder = compile.bind(0, false);
 
 		console.log('~> watching "src" directory');
 		await require('watchlist').watch([input], builder, {

@@ -1,71 +1,26 @@
-$gray = #F3F3F4
-$white = #FFFFFF
-$black = #1D1F20 // 404041
-
-$orange1 = #FAAE40 // #FBAD41
-$orange2 = #F78100
-
-$blue1 = #E2F5FA
-$blue2 = #6ECCE5
-$blue3 = #1855dc
-$blue4 = #093682
-
-$selection = rgba($orange1, 0.3)
-
-$focus-ring
-	&:focus,
-	&:focus-visible
-		box-shadow \
-			0 0 0 2px var(--bg, $white), \
-			0 0 0 4px $orange2
-	&:focus:not(:focus-visible)
-		box-shadow none
-
-$btn-shadow1
-	box-shadow \
-		rgba($blue4, 0.25) 0px 2px 5px -1px, \
-		rgba($black, 0.3) 0px 1px 3px -1px
-
-$btn-shadow2
-	box-shadow \
-		rgba($blue4, 0.25) 0px 6px 12px -2px, \
-		rgba($black, 0.3) 0px 3px 7px -3px
-
-// ---
-// ROOT
-// ---
-
-*
-	margin 0
-	outline none
-	padding 0
-
-*, *:after, *:before
-	box-sizing border-box
-
-*
-	@extend $focus-ring
-
-::selection
-	background-color $selection
-
-html
-	font-size 16px
-
-body
-	line-height 1.4
-	font-family Poppins
-	font-family -apple-system,BlinkMacSystemFont,"Segoe UI","Roboto","Oxygen","Ubuntu","Cantarell","Fira Sans","Droid Sans","Helvetica Neue",sans-serif
-	overflow-x hidden
-	color $black
-	width 100vw
+@require "-root"
 
 // ---
 // ELEMENTS
 // ---
 
-[hidden]
-	display none
+.logo
+	display flex
+	padding 0.5rem
+	position relative
+	align-items baseline
+	border-radius 0.25rem
+	text-decoration none
+	height 3.75rem
+
+.logo .ico
+	height 2.75rem
+	width 4rem
+
+.logo .txt
+	width 8rem
+	height 1.55rem
+	margin-left 4px
 
 .box
 	width 100%
@@ -92,39 +47,6 @@ nav .box
 
 nav .box
 	justify-content space-between
-
-.logo
-	display flex
-	padding 0.5rem
-	position relative
-	align-items baseline
-	border-radius 0.25rem
-	text-decoration none
-	height 3.75rem
-
-.logo .ico
-	height 2.75rem
-	width 4rem
-
-.logo .txt
-	width 8rem
-	height 1.55rem
-	margin-left 4px
-
-section
-	padding 4rem 0
-
-b
-	color $orange2
-
-h1
-	font-size 2.4rem
-	margin-bottom 1.5rem
-	line-height 1.2
-
-h2
-	font-size 2rem
-	margin-bottom 1rem
 
 .ac
 	align-items center
@@ -309,6 +231,8 @@ $pkg-transition = 650ms
 	position relative
 	will-change transform
 	transform-style preserve-3d
+	// animation showcase 1s infinite linear
+	animation showcase 2s infinite alternate cubic-bezier(0.65, 0.05, 0.36, 1)
 
 .face
 	overflow hidden
@@ -367,6 +291,23 @@ $pkg-transition = 650ms
 .face.a svg
 	transform translateX($pkg-length + $pkg-height)
 
+@keyframes showcase
+	0% { transform: translate3d(21px, 12px, -140px) rotateX(75deg) rotateY(7deg) rotateZ(-55deg) }
+	50% { transform: translate3d(0, 4px, -145px) rotateX(20deg) rotateY(0) rotateZ(0) }
+	100% { transform: translate3d(-21px, 12px, -140px) rotateX(75deg) rotateY(-7deg) rotateZ(55deg) }
+	// 0% { transform: translateZ(-140px) rotateX(63deg) rotate3d(0.75, 0, 0.05, 0) }
+	// 50% { transform: translateZ(-160px) rotateX(38deg) rotate3d(0.4, 0, 1, 180deg) }
+	// 100% { transform: translateZ(-140px) rotateX(63deg) rotate3d(0.05, 0.01, 1, 360deg) }
+	// 0%
+	// 	transform translate3d(0, 12px, -150px) rotateY(0deg) rotateX(68deg)
+	// // 25%
+	// // 	transform translate3d(0, 10px, -150px) rotateY(38deg) rotateX(68deg)
+	// 50%
+	// 	transform translate3d(0, 8px, -150px) rotateY(180deg) rotateX(98deg)
+	// // 75%
+	// // 	transform translate3d(0, 9px, -150px) rotateY(278deg) rotateX(68deg)
+	// 100%
+	// 	transform translate3d(0, 12px, -150px) rotateY(360deg) rotateX(68deg)
 
 // ---
 // SIGNUP FORM
