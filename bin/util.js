@@ -21,6 +21,14 @@ exports.read = function (file, dir) {
 }
 
 /**
+ * @param {string} dir
+ */
+exports.ls = function (dir) {
+	dir = resolve('.', dir);
+	return fs.readdir(dir);
+}
+
+/**
  * @param {string} file
  * @param {string} data
  */

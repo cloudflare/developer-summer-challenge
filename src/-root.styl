@@ -76,3 +76,57 @@ h1
 h2
 	font-size 2rem
 	margin-bottom 1rem
+
+.logo
+	display flex
+	padding 0.5rem
+	position relative
+	align-items baseline
+	border-radius 0.25rem
+	text-decoration none
+	height 3.75rem
+
+.logo .ico
+	height 2.75rem
+	width 4rem
+
+.logo .txt
+	width 8rem
+	height 1.55rem
+	margin-left 4px
+
+.logo.sq::after
+	content ''
+	width 3.75rem
+	height 3.75rem
+	position absolute
+	border 4px solid $gray
+	transition border-color 250ms
+	border-radius 4px
+	left 1.15rem
+	top 0.15rem
+	z-index -1
+
+.logo.sq:hover::after
+	border-color $selection
+
+.tac
+	text-align center
+
+footer a
+	border-radius 4px
+	text-decoration none
+	padding $footer-link-padding
+	transition color 150ms linear
+	color currentColor
+
+footer .copy
+	font-size 0.75rem
+	margin 5rem auto 0
+	text-align center
+footer .copy a
+	padding 0.125rem
+
+footer a:hover,
+footer a:focus
+	color $orange2
