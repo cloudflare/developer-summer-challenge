@@ -9,7 +9,9 @@ import type { Entry } from './signup';
 import type { ServerResponse } from 'worktop/response';
 
 // @ts-ignore :: injected
-import HTML from 'index.html';
+import LANDING from 'index.html';
+// @ts-ignore :: injected
+import CONFIRM from 'confirm/index.html';
 
 const API = new Router;
 
@@ -23,11 +25,10 @@ function toError(res: ServerResponse, status: number, reason: string) {
  */
 API.add('GET', '/', async (req, res) => {
 	// Short-term TTL for box count update
-	res.setHeader('Cache-Control', 'public,max-age=60');
-	res.setHeader('Content-Type', 'text/html;charset=UTF-8');
 	// TODO: replace {{count}} inside HTML content
 	// const value = await KV.count();
-	return res.send(200, HTML);
+	res.setHeader('Cache-Control', 'public,max-age=60');
+	return utils.render(res, LANDING, { count: '300' });
 });
 
 /**
@@ -79,8 +80,7 @@ API.add('POST', '/signup', async (req, res) => {
 	let sent = await Sparkpost.confirm(entry);
 	if (!sent) return toError(res, 500, 'Error sending confirmation email');
 
-	// TODO: send down success markup
-	return res.end('OK');
+	return utils.render(res, CONFIRM, { email: entry.email });
 });
 
 // init; attach Cache API

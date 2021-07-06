@@ -44,8 +44,16 @@ const output = join(__dirname, '../build');
 	console.log('~> built in %sms', timer());
 
 	if (isProd) {
-		console.log('~> rm "build/index.html" file');
-		await $.rm(join(output, 'index.html'));
+		await $.ls(output).then(files => {
+			return Promise.all(
+				files.map(str => {
+					if (str === 'index.js') return;
+					console.log('~> rm "build/%s" item', str);
+					str = join(output, str);
+					return $.rm(str);
+				})
+			);
+		});
 	}
 })().catch(err => {
 	return $.bail(err.stack);
