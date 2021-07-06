@@ -113,6 +113,32 @@ h2
 .tac
 	text-align center
 
+a.hov
+	color $orange2
+	font-weight 700
+	text-decoration none
+	position relative
+	overflow hidden
+	z-index 1
+
+a.hov::after
+	content ''
+	position absolute
+	background $selection
+	transition 350ms cubic-bezier(0.25, 0.1, 0, 2.05)
+	left 1rem
+	bottom -0.5rem // (0.75rem / -2)
+	width calc(100% - 0.75rem)
+	height calc(100% - 0.75rem)
+	z-index 0
+
+a.hov:hover::after
+	left -0.125rem
+	bottom -0.125rem
+	border-radius 2px
+	width calc(100% + 0.25rem)
+	height calc(100% + 0.25rem)
+
 footer a
 	border-radius 4px
 	text-decoration none
