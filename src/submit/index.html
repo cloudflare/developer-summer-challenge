@@ -2,10 +2,11 @@
 <html lang="en">
 	<head>
 		<meta charset="utf-8"/>
-		<title>Thank You | Cloudflare Developer Anti-Conference</title>
+		<title>Submit Project | Cloudflare Developer Anti-Conference</title>
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<!-- inject:float.styl -->
+		<!-- inject:submit/index.styl -->
+		<!-- inject:index.js -->
 	</head>
 	<body>
 		<div class="card tac">
@@ -16,10 +17,60 @@
 				</svg>
 			</a>
 
-			<h1>Thank You</h1>
-			<p>Thank you for registering for the <b>Cloudflare Anti-Conference</b>!</p>
-			<p>Your <b>unique submission link</b> has been sent to:</p>
-			<p><strong>{{ email }}</strong></p>
+			<h1>Submit Project</h1>
+			<p>Thank you for completing for the <b>Cloudflare Anti-Conference</b> challenge!</p>
+			<p>Please complete the submission form below.</p>
+			<small><strong>NOTE:</strong> You are only allowed <b>1 entry</b>.</small>
+
+			<form method="POST" action="/submit">
+				<input
+					type="hidden" name="code" hidden
+					readonly required value="{{ code }}"
+				/>
+
+				<label for="fname">
+					<input
+						id="fname" name="firstname"
+						readonly required value="{{ firstname }}"
+					/>
+					<span>First Name</span>
+				</label>
+
+				<label for="lname">
+					<input
+						id="lname" name="lastname"
+						readonly required value="{{ lastname }}"
+					/>
+					<span>Last Name</span>
+				</label>
+
+				<label for="email" class="fw">
+					<input
+						id="email" name="email" type="email"
+						readonly required value="{{ email }}"
+					/>
+					<span>Email Address</span>
+				</label>
+
+				<label for="projecturl" class="fw">
+					<input id="projecturl" name="projecturl" type="url" required/>
+					<span>Project Repository URL</span>
+					<small>A link to your application's source code; eg; "https://github.com/user/repo"</small>
+				</label>
+
+				<label for="demourl" class="fw">
+					<input id="demourl" name="demourl" type="url" required />
+					<span>Live Demo URL</span>
+					<small>A working demonstration of your application; eg; "https://demo.workers.dev"</small>
+				</label>
+
+				<label for="cftv" class="check fw">
+					<input id="cftv" name="cftv" type="checkbox" />
+					I would like to discuss my project on&nbsp;<a class="hov" href="https://cloudflare.tv">Cloudflare.tv</a>
+				</label>
+
+				<button type="submit" class="btn pri fw">Submit Project</button>
+			</form>
 		</div>
 
 		<footer>
