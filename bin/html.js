@@ -9,7 +9,9 @@ const output = resolve(__dirname, '../build');
 
 const PAGES = [
 	'index.html',
-	'confirm/index.html'
+	'confirm/index.html',
+	'submit/index.html',
+	'done/index.html',
 ];
 
 /**

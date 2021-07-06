@@ -1,3 +1,4 @@
+// @ts-check
 (function () {
 	function oninput(ev) {
 		var input = ev.target;
@@ -5,12 +6,36 @@
 		input.parentNode.classList.toggle('fill', val.length > 0);
 	}
 
+	/**
+	 *
+	 * @param {HTMLInputElement} label
+	 * @param {string|false} error
+	 */
+	function setError(label, error) {
+		label.classList.toggle('error', !!error);
+		var help = label.querySelector('small');
+		if (!help && error) label.appendChild(
+			help = document.createElement('small')
+		);
+		if (help && help._prev && !error) {
+			help.textContent = help._prev;
+		} else if (error) {
+			help._prev = help._prev || help.textContent;
+			help.textContent = error;
+		} else if (help) {
+			help.remove();
+		}
+	}
+
 	function onload() {
 		var $ = document.querySelector.bind(document);
-		var i=0, inputs = document.querySelectorAll('label>input');
+		var i=0, tmp, inputs = document.querySelectorAll('label>input');
 
 		for (; i < inputs.length; i++) {
-			inputs[i].oninput = oninput;
+			tmp = inputs[i];
+			if (!/^(radio|checkbox)$/.test(tmp.type)) {
+				tmp.oninput = oninput;
+			}
 		}
 
 		$('form').onsubmit = async function (ev) {
@@ -24,20 +49,25 @@
 
 			if (res.ok) {
 				form.reset();
-				// TODO: success screen
-				console.log('OK');
 				for (i=0; i < inputs.length; i++) {
-					input[i].parentNode.className = '';
+					setError(inputs[i].parentNode, false);
 				}
+				let html = await res.text();
+				document.documentElement.innerHTML = html;
 			} else {
+				var text = await res.text();
+
 				try {
-					var error = await res.json();
+					var k, tmp, errors=JSON.parse(text);
+					for (k in errors) {
+						tmp = form.elements[k];
+						setError(tmp.parentNode, errors[k]);
+					}
 				} catch (e) {
 					// was not json
+					// TODO: toast box?
+					console.log('FAIL', text);
 				}
-
-				// TODO: toast box?
-				console.log('FAIL', error);
 			}
 		}
 	}

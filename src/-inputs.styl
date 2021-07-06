@@ -35,6 +35,7 @@ label
 
 label > span
 	color #3C434A
+	user-select none
 	position absolute
 	transition all 250ms
 	transform-origin bottom left
@@ -53,21 +54,26 @@ input
 	line-height 2rem
 	font-size 1rem
 
-input:not(:disabled) hover,
-label:hover > input:not(:disabled)
+input:not(:disabled):not([readonly]):hover,
+label:hover > input:not(:disabled):not([readonly])
 	border-color $orange1
 
-input:disabled
+input:disabled,
+input[readonly]
 	opacity 0.7
-	cursor not-allowed
 	background-color $gray
 	border-bottom-color rgba(#7C8794, 0.5)
 	& ~ span
 		color rgba(#7C8794, 0.6)
+input:disabled
+	cursor not-allowed
 
 input:focus,
 input:focus-visible
 	box-shadow none
+
+input:not([readonly]):focus,
+input:not([readonly]):focus-visible
 	border-color $orange2
 
 label input:invalid + span
