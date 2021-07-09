@@ -6,9 +6,25 @@
 		input.parentNode.classList.toggle('fill', val.length > 0);
 	}
 
+	var toaster;
+	function toast(title, text) {
+		if (!toaster) {
+			toaster = document.createElement('div');
+			document.body.appendChild(toaster);
+			toaster.className = 'toaster';
+		}
+		// super basic, just show a message
+		var toast = document.createElement('div');
+		toast.innerHTML = `<strong>${title}</strong>`;
+		toast.innerHTML += `<small>${text}</small>`;
+		toaster.appendChild(toast);
+
+		setTimeout(() => toast.className = 'show', 250);
+		setTimeout(() => toaster.removeChild(toast), 10e3);
+	}
+
 	/**
-	 *
-	 * @param {HTMLInputElement} label
+	 * @param {HTMLElement} label
 	 * @param {string|false} error
 	 */
 	function setError(label, error) {
@@ -28,8 +44,9 @@
 	}
 
 	function onload() {
-		var $ = document.querySelector.bind(document);
-		var i=0, tmp, inputs = document.querySelectorAll('label>input');
+		/** @type {NodeListOf<HTMLInputElement>} */
+		var inputs = document.querySelectorAll('label>input');
+		var i=0, tmp, $ = document.querySelector.bind(document);
 
 		for (; i < inputs.length; i++) {
 			tmp = inputs[i];
@@ -47,27 +64,38 @@
 				body: new FormData(form),
 			});
 
+			// always reset any errors
+			for (i=0; i < inputs.length; i++) {
+				setError(inputs[i].parentNode, false);
+			}
+
 			if (res.ok) {
 				form.reset();
-				for (i=0; i < inputs.length; i++) {
-					setError(inputs[i].parentNode, false);
-				}
 				let html = await res.text();
 				document.documentElement.innerHTML = html;
 			} else {
-				var text = await res.text();
+				var title='', text = await res.text();
 
 				try {
-					var k, tmp, errors=JSON.parse(text);
-					for (k in errors) {
-						tmp = form.elements[k];
-						setError(tmp.parentNode, errors[k]);
-					}
+					var obj = JSON.parse(text) || {};
 				} catch (e) {
 					// was not json
-					// TODO: toast box?
-					console.log('FAIL', text);
+					return toast('Error ' + res.status, text);
 				}
+
+				if (res.status === 422) {
+					title = 'Validation Errors';
+					text = 'Please correct the invalid form field(s) and resubmit.'
+					for (var k in obj) {
+						var tmp = form.elements[k];
+						setError(tmp.parentNode, obj[k]);
+					}
+				} else {
+					title = 'Error ' + (obj.status || 500);
+					text = obj.reason || 'An unknown error occurred!';
+				}
+
+				toast(title, text);
 			}
 		}
 	}
