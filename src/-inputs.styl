@@ -99,3 +99,45 @@ label.error
 		border-color #f03e3e !important
 	input, small, input+span
 		color #ff6b6b
+
+.toaster
+	position fixed
+	pointer-events none
+	bottom 2rem
+	right 2rem
+	z-index 1
+
+.toaster div
+	opacity 0
+	width 18rem
+	background $white
+	@extend $btn-shadow1
+	border-right 4px solid #ff6b6b
+	border-radius 4px 2px 2px 4px
+	animation toast 250ms ease-in 8s forwards
+	transition all 200ms ease-out
+	transform translateY(1rem)
+	position absolute
+	padding 1rem
+	bottom 0
+	right 0
+
+.toaster small
+	display block
+	font-size 0.8rem
+	padding-top 0.25rem
+
+.toaster div.show
+	transform translateY(0)
+	opacity 1
+
+@keyframes toast {
+	from {
+		opacity 1
+		transform translateY(0)
+	}
+	to {
+		opacity 0
+		transform translateY(-1rem)
+	}
+}
