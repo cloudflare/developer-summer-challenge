@@ -138,8 +138,6 @@ $pkg-transition = 650ms
 	position relative
 	will-change transform
 	transform-style preserve-3d
-	// animation showcase 1s infinite linear
-	animation showcase 2s infinite alternate cubic-bezier(0.65, 0.05, 0.36, 1)
 
 .face
 	overflow hidden
@@ -197,24 +195,6 @@ $pkg-transition = 650ms
 	transform translateX($pkg-length)
 .face.a svg
 	transform translateX($pkg-length + $pkg-height)
-
-@keyframes showcase
-	0% { transform: translate3d(21px, 12px, -140px) rotateX(75deg) rotateY(7deg) rotateZ(-55deg) }
-	50% { transform: translate3d(0, 4px, -145px) rotateX(20deg) rotateY(0) rotateZ(0) }
-	100% { transform: translate3d(-21px, 12px, -140px) rotateX(75deg) rotateY(-7deg) rotateZ(55deg) }
-	// 0% { transform: translateZ(-140px) rotateX(63deg) rotate3d(0.75, 0, 0.05, 0) }
-	// 50% { transform: translateZ(-160px) rotateX(38deg) rotate3d(0.4, 0, 1, 180deg) }
-	// 100% { transform: translateZ(-140px) rotateX(63deg) rotate3d(0.05, 0.01, 1, 360deg) }
-	// 0%
-	// 	transform translate3d(0, 12px, -150px) rotateY(0deg) rotateX(68deg)
-	// // 25%
-	// // 	transform translate3d(0, 10px, -150px) rotateY(38deg) rotateX(68deg)
-	// 50%
-	// 	transform translate3d(0, 8px, -150px) rotateY(180deg) rotateX(98deg)
-	// // 75%
-	// // 	transform translate3d(0, 9px, -150px) rotateY(278deg) rotateX(68deg)
-	// 100%
-	// 	transform translate3d(0, 12px, -150px) rotateY(360deg) rotateX(68deg)
 
 // ---
 // SIGNUP FORM
@@ -331,13 +311,14 @@ footer li
 // PKG CONTENTS
 // ---
 
-$pkg-icon-size = 8rem
-$pkg-icon-gutter = 1rem
+$pkg-icon-size = 7rem
+$pkg-icon-gutter = 0.5rem
+$pkg-icon-offset = 23rem
 
 $pkg-icon-delay-base = 300ms
 $pkg-icon-delay-step = 150ms
 
-.scene figure
+.scene svg.i
 	height $pkg-icon-size
 	width $pkg-icon-size
 	position absolute
@@ -349,45 +330,36 @@ $pkg-icon-delay-step = 150ms
 	transition-duration var(--ms)
 	transition-delay var(--w)
 	border-radius 50%
-	display flex
-	justify-content center
-	align-items center
-	padding 1rem
-	padding-left var(--l, 1rem)
-
-.scene figure svg
-	width 100%
-	height 100%
 
 // keycap (last & left-most)
-figure.k
-	--x (22rem + $pkg-icon-size*1 + $pkg-icon-gutter*0)
+svg.i.k
+	--x ($pkg-icon-offset + $pkg-icon-size*1 + $pkg-icon-gutter*0)
 	--ms ($pkg-icon-delay-base + $pkg-icon-delay-step*0)
 	--w 800ms
 
 // hat (2nd last)
-figure.h
+svg.i.h
 	--l 1.6rem
-	--x (22rem + $pkg-icon-size*2 + $pkg-icon-gutter*1)
+	--x ($pkg-icon-offset + $pkg-icon-size*2 + $pkg-icon-gutter*1)
 	--ms ($pkg-icon-delay-base + $pkg-icon-delay-step*1)
 	--w 700ms
 
 // cup (middle)
-figure.c
+svg.i.c
 	--l 1.8rem
-	--x (22rem + $pkg-icon-size*3 + $pkg-icon-gutter*2)
+	--x ($pkg-icon-offset + $pkg-icon-size*3 + $pkg-icon-gutter*2)
 	--ms ($pkg-icon-delay-base + $pkg-icon-delay-step*2)
 	--w 600ms
 
 // sticker (2nd)
-figure.s
-	--x (22rem + $pkg-icon-size*4 + $pkg-icon-gutter*3)
+svg.i.s
+	--x ($pkg-icon-offset + $pkg-icon-size*4 + $pkg-icon-gutter*3)
 	--ms ($pkg-icon-delay-base + $pkg-icon-delay-step*3)
 	--w 500ms
 
 // tshirt (1st & right-most)
-figure.t
-	--x (22rem + $pkg-icon-size*5 + $pkg-icon-gutter*4)
+svg.i.t
+	--x ($pkg-icon-offset + $pkg-icon-size*5 + $pkg-icon-gutter*4)
 	--ms ($pkg-icon-delay-base + $pkg-icon-delay-step*4)
 	--w 400ms
 
@@ -405,16 +377,20 @@ figure.t
 @media screen and (min-width: 769px)
 	.pkg
 		animation none
-		transition transform $pkg-transition
+		transition transform $pkg-transition 1.2s
 		transform \
 			translate3d(-72px, 12px, -150px) \
 			rotateY(38deg) rotateX(68deg)
+	.scene .face.h
+		transition-delay 1s
 	.scene:hover .pkg
 		transform translateZ(-50px) rotateY(28deg) rotateX(48deg) rotateZ(12deg)
 		transform translateZ(-50px) rotateY(30deg) rotateX(48deg) rotateZ(10deg)
+		transition-delay 0s
 	.scene:hover .face.h
 		transform rotateY(0deg) rotateX(58deg)
-	.scene:hover figure
+		transition-delay 0s
+	.scene:hover svg.i
 		// unset / revert `.scene:hover .pkg` transformation
 		transform \
 			rotateZ(-10deg) rotateX(-48deg) rotateY(-30deg) translateZ(-50px) \
@@ -440,7 +416,20 @@ figure.t
 	.grid
 		grid-template-columns 1fr
 	.scene
-		margin 0
+		width 100%
+		height auto
+		margin -2rem 0
+		border none
+	.scene .pkg
+		display flex
+		flex-wrap wrap
+		justify-content center
+		grid-gap 0.5rem 0.75rem
+		gap 0.5rem 0.75rem
+	.scene svg.i
+		position relative
+	.scene .face
+		display none
 	header[role=banner] strong
 		display block
 		margin-right 0
