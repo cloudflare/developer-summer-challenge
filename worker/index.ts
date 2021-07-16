@@ -6,6 +6,7 @@ import * as utils from './utils';
 import * as Code from './code';
 
 import type { Entry } from './signup';
+import type { ULID } from 'worktop/utils';
 import type { ServerResponse } from 'worktop/response';
 
 // @ts-ignore :: injected
@@ -191,6 +192,64 @@ API.add('GET', '/admin', async (req, res) => {
 	);
 
 	return utils.render(res, HTML, { count });
+});
+
+/**
+ * POST /admin/award
+ * Accept a winner!
+ * @NOTE Access protection
+ */
+API.add('POST', '/admin/award', async (req, res) => {
+	try {
+		type Input = Pick<Entry, 'uid'|'email'> & { count: number };
+		var input = await req.body<Input>();
+	} catch (err) {
+		return toError(res, 400, 'Error parsing input');
+	}
+
+	let { uid, email, count } = input || {};
+	uid = String(uid||'').trim() as ULID;
+	email = String(email||'').trim();
+	count = +(count || 0);
+
+	let { errors, invalid } = utils.validate({ email, uid }, {
+		email(val: string) {
+			if (val.length < 1) return 'Required';
+			return utils.isEmail(val) || 'Invalid email address';
+		},
+		uid(val: string) {
+			return val.length === 26 || 'Invalid identifier';
+		},
+	});
+
+	if (invalid) {
+		return res.send(422, errors);
+	}
+
+	let entry = await Signup.find(email);
+	if (!entry) return toError(res, 404, 'Unknown entry');
+	if (entry.uid !== uid) return toError(res, 404, 'Unknown entry');
+	if (entry.winner) return toError(res, 400, 'Already a winner!');
+
+	let remains = await utils.toCount().then(x => parseInt(x, 10));
+	if (Math.abs(remains - count) >= 5) return toError(res, 400, 'Count is out of sync!');
+
+	entry.winner = true;
+	entry.code = entry.uid;
+
+	let isOK = await Code.save(entry);
+	if (!isOK) return toError(res, 500, 'Error saving unique code');
+
+	isOK = await Signup.save(entry);
+	if (!isOK) return toError(res, 500, 'Error persisting entry');
+
+	isOK = await utils.setCount(count);
+	if (!isOK) return toError(res, 500, 'Error syncing remaining count');
+
+	// let sent = await Sparkpost.winner(entry);
+	// if (!sent) return toError(res, 500, 'Error sending winner email');
+
+	res.end('OK');
 });
 
 // init; attach Cache API
