@@ -16,6 +16,10 @@ export function remove(key: string): Promise<boolean> {
 	return DB.remove(DATA, key);
 }
 
+export function list(prefix: string, limit = 1000) {
+	return DB.list(DATA, { prefix, limit });
+}
+
 export function toCount(): Promise<string> {
 	return DB.read(DATA, '::remain', 'text').then(v => v || '300+');
 }

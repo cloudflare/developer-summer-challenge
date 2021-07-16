@@ -15,6 +15,8 @@ import CONFIRM from 'confirm/index.html';
 // @ts-ignore :: injected
 import SUBMIT from 'submit/index.html';
 // @ts-ignore :: injected
+import ADMIN from 'admin/index.html';
+// @ts-ignore :: injected
 import DONE from 'done/index.html';
 
 const API = new Router;
@@ -169,6 +171,26 @@ API.add('POST', '/submit', async (req, res) => {
 		firstname: entry.firstname,
 		email: entry.email,
 	});
+});
+
+/**
+ * GET /admin
+ * Render the Admin dashboard
+ * @NOTE Access protection
+ */
+API.add('GET', '/admin', async (req, res) => {
+	const count = await utils.toCount();
+	const items = await Signup.all();
+
+	// All `uid` keys are ULIDs (timestamp-based)
+	items.sort((a, b) => b.uid.localeCompare(a.uid));
+
+	const HTML = ADMIN.replace(
+		/['"]{{ entries }}["']/,
+		JSON.stringify(JSON.stringify(items))
+	);
+
+	return utils.render(res, HTML, { count });
 });
 
 // init; attach Cache API

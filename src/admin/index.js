@@ -1,43 +1,43 @@
 // @ts-check
 (function () {
-	var EMPTY = '<td class="na"> – </td>';
-	var STATES = ['SIGNUP', 'SUBMIT', 'WINNER'];
-
-	/** @param {Date} x */
-	var toDate = x => x.toLocaleDateString();
+	/** @param {number} secs */
+	var toDate = secs => new Date(secs * 1e3);
 
 	/** @param {string} x */
 	var toLink = x => `<a href="${x}" target="_blank">${x}</a>`;
 
-	var rand = () => Math.random() > 0.5;
-
-	var COUNT = parseInt('300+', 10);
-	// var COUNT = parseInt('{{ COUNT }}', 10);
-	// var ENTRIES = JSON.parse('{{ DATA }}');
-	var ENTRIES = Array.from({ length: 100 }, (n, i) => {
-		let state = rand() ? (rand() ? 2 : 1) : 0;
-		let isSubmit = state > 0;
-		return {
-			num: i,
-			status: state,
-			email: `foo${i}@asd.com`,
-			firstname: `Foo ${i}`,
-			lastname: `Bar ${i}`,
-			code: 'asdbas',
-			created_at: new Date,
-			submit_at: isSubmit ? new Date : null,
-			projecturl: isSubmit ? 'https://github.com' : null,
-			demourl: isSubmit ? 'https://asd.com' : null,
-			cftv: isSubmit ? +rand() : null,
-			// row?: string,
-		}
-	});
+	var EMPTY = '<td class="na"> – </td>';
+	var STATES = ['SIGNUP', 'SUBMIT', 'WINNER'];
+	var ENTRIES = JSON.parse('{{ entries }}');
+	var COUNT = parseInt('{{ count }}', 10);
 
 	function onload() {
 		var $ = document.querySelector.bind(document);
 		var $sorts = document.querySelectorAll('th[sort]');
-		var $count = $('footer > b');
+		// var $cols = document.querySelectorAll('th');
+		var tmp, $count = $('footer > b');
 		var i=0, $tbody=$('tbody');
+
+		for (i=0; i < ENTRIES.length; i++) {
+			tmp = ENTRIES[i];
+			tmp.seq = i + 1;
+			tmp.winner = !!tmp.winner;
+			tmp.state = tmp.winner ? 2 : tmp.submit_at ? 1 : 0;
+			tmp.created_at = toDate(tmp.created_at);
+			if (tmp.submit_at) {
+				tmp.submit_at = toDate(tmp.submit_at);
+			}
+			if (tmp.address) {
+				tmp.country = tmp.address.country;
+				tmp.address = [
+					tmp.address.street1, tmp.address.street2,
+					tmp.address.city, tmp.address.state,
+					tmp.address.country, tmp.address.postal,
+				].filter(Boolean).join(',');
+			} else {
+				tmp.country = tmp.address = null;
+			}
+		}
 
 		function toCount() {
 			$count.textContent = COUNT;
@@ -99,7 +99,7 @@
 			});
 
 			if (res.ok) {
-				data.status = 2;
+				data.state = 2;
 				var cell = tr.children[4];
 				cell.textContent = STATES[2];
 				COUNT--; toCount();
@@ -119,26 +119,25 @@
 				tr = document.createElement('tr');
 				tr.index = i;
 
-				cells += `<td>${data.num}</td>`;
+				cells += `<td>${data.seq}</td>`;
 				cells += `<td>${data.firstname}</td>`;
 				cells += `<td>${data.lastname}</td>`;
 				cells += `<td>${data.email}</td>`;
 
-				cells += `<td>${STATES[data.status]}</td>`;
-				cells += `<td>${toDate(data.created_at)}</td>`;
+				cells += `<td>${STATES[data.state]}</td>`;
+				cells += `<td>${data.created_at.toLocaleDateString()}</td>`;
 
 				if (data.submit_at) {
-					cells += `<td>${toDate(data.submit_at)}</td>`;
+					cells += `<td>${data.submit_at.toLocaleDateString()}</td>`;
 					cells += `<td>${toLink(data.projecturl)}</td>`;
 					cells += `<td>${toLink(data.demourl)}</td>`;
 					cells += data.cftv ? '<td>✅</td>' : '<td>⛔️</td>';
-					// is winner
-					if (data.status === 2) {
-						cells += EMPTY; // BUTTON
-						cells += '<td></td>'; // Address
-						cells += '<td></td>'; // Country
+					cells += data.winner ? EMPTY : '<td><button class="btn pri">AWARD</button></td>';
+					// only winners can get address form
+					if (data.winner && data.address) {
+						cells += `<td>${data.address}</td>`; // Address
+						cells += `<td>${data.country}</td>`; // Country
 					} else {
-						cells += '<td><button class="btn pri">AWARD</button></td>'; // BUTTON
 						cells += EMPTY; // Address
 						cells += EMPTY; // Country
 					}
