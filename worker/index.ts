@@ -2,7 +2,6 @@ import { Router } from 'worktop';
 import * as Cache from 'worktop/cache';
 import * as Sparkpost from './emails';
 import * as Signup from './signup';
-import * as Sheets from './sheet';
 import * as utils from './utils';
 import * as Code from './code';
 
@@ -76,10 +75,6 @@ API.add('POST', '/signup', async (req, res) => {
 	// Generate new `Entry` record
 	let entry = Signup.prepare({ email, firstname, lastname });
 
-	let rownum = await Sheets.append(entry);
-	if (!rownum) return toError(res, 500, 'Error saving registration details');
-
-	entry.row = rownum;
 	let isOK = await Signup.save(entry);
 	if (!isOK) return toError(res, 500, 'Error persisting entry');
 
@@ -160,10 +155,7 @@ API.add('POST', '/submit', async (req, res) => {
 	entry = { ...entry, projecturl, demourl, cftv };
 	entry.submit_at = Date.now() / 1e3 | 0;
 
-	let isOK = await Sheets.update(entry);
-	if (!isOK) return toError(res, 500, 'Error saving submission');
-
-	isOK = await Signup.save(entry);
+	let isOK = await Signup.save(entry);
 	if (!isOK) return toError(res, 500, 'Error updating entry');
 
 	isOK = await Code.destroy(entry.code);

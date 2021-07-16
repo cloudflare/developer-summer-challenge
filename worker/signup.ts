@@ -13,7 +13,6 @@ export interface Entry {
 	projecturl?: string;
 	demourl?: string;
 	cftv?: boolean;
-	row?: string;
 }
 
 const toKey = (email: string) => `user:${email}`;
