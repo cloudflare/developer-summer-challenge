@@ -1,0 +1,104 @@
+@require "-root"
+@require "-inputs"
+
+body
+	overflow-x scroll
+
+table
+	--min 10rem
+	display grid
+	min-width 100%
+	border-collapse collapse
+	// initial values – overridden via JS resizer(s)
+	grid-template-columns minmax(6rem, 1fr) repeat(var(--n, 5), minmax(var(--min), 2fr))
+
+thead, tbody, tr
+	display contents
+
+th, td
+	padding 1rem
+	overflow hidden
+	text-overflow ellipsis
+	white-space nowrap
+
+// td:nth-child(5), // status
+// td:nth-child(10) // CFTV
+// 	text-align center
+
+th
+	color white
+	text-align left
+	font-size 1.1rem
+	background #6c7ae0
+	font-weight normal
+	position relative
+	position sticky
+	top 0
+
+th:last-child
+	border 0
+
+// .resize-handle
+// 	position absolute
+// 	top 0
+// 	right 0
+// 	bottom 0
+// 	background black
+// 	opacity 0
+// 	width 3px
+// 	cursor col-resize
+
+// .resize-handle:hover,
+// /* The following selector is needed so the handle is visible during resize even if the mouse isn't over the handle anymore */
+// .header--being-resized .resize-handle
+// 	opacity 0.5
+
+// th:hover .resize-handle
+// 	opacity 0.3
+
+th[sort]
+	cursor pointer
+th[sort]::after
+	content '↕'
+	position absolute
+	line-height 1.6
+	opacity 0.5
+	right 1rem
+th[sort]:hover
+	background-color #a4adec
+th[sort].asc::after
+	opacity 0.7
+	content '↑'
+th[sort].desc::after
+	opacity 0.7
+	content '↓'
+
+td
+	padding-top 0.75rem
+	padding-bottom 0.75rem
+	color #808080
+
+td.na
+	user-select none
+	color #ddd
+
+tr:nth-child(even) td
+	background #f8f6ff
+
+.btn
+	font-size 0.6rem
+	padding 0.5rem
+.btn[disabled]
+	cursor not-allowed
+	opacity 0.3
+
+footer
+	position fixed
+	font-size 1rem
+	padding 0.5rem 1.5rem
+	background-color $blue1
+	border-top-left-radius 4px
+	border 2px solid $blue4
+	font-weight bold
+	bottom -2px
+	right -4px
