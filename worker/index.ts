@@ -153,7 +153,7 @@ API.add('POST', '/submit', async (req, res) => {
 
 	// Save only the new values
 	entry = { ...entry, projecturl, demourl, cftv };
-	entry.submit_at = Date.now() / 1e3 | 0;
+	entry.submit_at = utils.seconds();
 
 	let isOK = await Signup.save(entry);
 	if (!isOK) return toError(res, 500, 'Error updating entry');

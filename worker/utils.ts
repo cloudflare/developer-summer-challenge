@@ -20,6 +20,10 @@ export function toCount(): Promise<string> {
 	return DB.read(DATA, '::remain', 'text').then(v => v || '300+');
 }
 
+export function seconds(): number {
+	return Date.now() / 1e3 | 0;
+}
+
 // @see https://stackoverflow.com/a/32686261
 export function isEmail(value: string): boolean {
 	return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);

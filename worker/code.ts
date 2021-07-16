@@ -1,4 +1,3 @@
-import { uid } from 'worktop/utils';
 import { read, write, remove } from './utils';
 import type { Entry } from './signup';
 

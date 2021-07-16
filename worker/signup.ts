@@ -1,5 +1,5 @@
 import { uid } from 'worktop/utils';
-import { read, write } from './utils';
+import { read, write, seconds } from './utils';
 
 type DATETIME = number; // seconds
 
@@ -21,7 +21,7 @@ export function prepare(values: Pick<Entry, 'email'|'firstname'|'lastname'>): En
 	return {
 		...values,
 		code: uid(64),
-		created_at: Date.now() / 1e3 | 0,
+		created_at: seconds(),
 	};
 }
 
