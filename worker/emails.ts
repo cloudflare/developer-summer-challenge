@@ -42,9 +42,45 @@ async function send(
 	return res.ok && data.results.total_accepted_recipients === 1;
 }
 
+/**
+ * Confirming their signup
+ * Sending unique submission form
+ */
 export function confirm(entry: Entry): Promise<boolean> {
 	return send('devchallenge-confirm', entry, {
 		firstname: entry.firstname,
 		code: entry.code,
+	});
+}
+
+/**
+ * Received their project submission
+ */
+export function submit(entry: Entry): Promise<boolean> {
+	return send('devchallenge-submit', entry, {
+		firstname: entry.firstname,
+		projecturl: entry.projecturl!,
+		demourl: entry.demourl!,
+	});
+}
+
+/**
+ * Notify someone that they won!
+ * Sending "/shipping?code={code}" link
+ */
+export function winner(entry: Entry): Promise<boolean> {
+	return send('devchallenge-winner', entry, {
+		firstname: entry.firstname,
+		code: entry.code,
+	});
+}
+
+/**
+ * Confirm "/shipping" form is done
+ * Nothing else to be done~!
+ */
+ export function complete(entry: Entry): Promise<boolean> {
+	return send('devchallenge-complete', entry, {
+		firstname: entry.firstname,
 	});
 }
