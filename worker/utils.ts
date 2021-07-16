@@ -24,6 +24,10 @@ export function toCount(): Promise<string> {
 	return DB.read(DATA, '::remain', 'text').then(v => v || '300+');
 }
 
+export function setCount(value: string|number): Promise<boolean> {
+	return DB.write(DATA, '::remain', ''+value);
+}
+
 export function seconds(): number {
 	return Date.now() / 1e3 | 0;
 }
