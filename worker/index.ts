@@ -164,9 +164,9 @@ API.add('POST', '/submit', async (req, res) => {
 	isOK = await Code.destroy(entry.code);
 	if (!isOK) return toError(res, 500, 'Error consuming token');
 
-	// TODO: send "submission received" email?
-	// let sent = await Sparkpost.confirm(entry);
-	// if (!sent) return toError(res, 500, 'Error sending confirmation email');
+	// send "submission received" email
+	let sent = await Sparkpost.submit(entry);
+	if (!sent) return toError(res, 500, 'Error sending confirmation email');
 
 	return utils.render(res, DONE, {
 		firstname: entry.firstname,
@@ -246,8 +246,9 @@ API.add('POST', '/admin/award', async (req, res) => {
 	isOK = await utils.setCount(count);
 	if (!isOK) return toError(res, 500, 'Error syncing remaining count');
 
-	// let sent = await Sparkpost.winner(entry);
-	// if (!sent) return toError(res, 500, 'Error sending winner email');
+	// send "you won a swag box!" email
+	let sent = await Sparkpost.winner(entry);
+	if (!sent) return toError(res, 500, 'Error sending winner email');
 
 	res.end('OK');
 });
