@@ -14,14 +14,8 @@ watch_dir = "worker"
 [build.upload]
 format = "service-worker"
 
-[vars]
-SHEET_ID = "<< SPREADSHEET ID >>"
-GTOKEN_EMAIL = "<< SERVICE ACCOUNT EMAIL >>"
-
 # [secrets]
 # SPARKPOST_KEY
-# GTOKEN_PRIVKEY
-# GTOKEN_KID
 
 [[kv_namespaces]]
 binding = "DATA"
