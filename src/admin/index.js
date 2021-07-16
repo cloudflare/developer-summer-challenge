@@ -11,6 +11,23 @@
 	var ENTRIES = JSON.parse('{{ entries }}');
 	var COUNT = parseInt('{{ count }}', 10);
 
+	var toaster;
+	function toast(title, text) {
+		if (!toaster) {
+			toaster = document.createElement('div');
+			document.body.appendChild(toaster);
+			toaster.className = 'toaster';
+		}
+		// super basic, just show a message
+		var toast = document.createElement('div');
+		toast.innerHTML = `<strong>${title}</strong>`;
+		toast.innerHTML += `<small>${text}</small>`;
+		toaster.appendChild(toast);
+
+		setTimeout(() => toast.className = 'show', 250);
+		setTimeout(() => toaster.removeChild(toast), 10e3);
+	}
+
 	function onload() {
 		var $ = document.querySelector.bind(document);
 		var $sorts = document.querySelectorAll('th[sort]');
@@ -75,16 +92,16 @@
 			var elem = ev.target;
 			if (elem.nodeName !== 'BUTTON') return;
 
-			if (COUNT < 1) return console.error('no more prizes');
+			if (COUNT < 1) return toast('ERROR', 'No more prizes!');
 
 			var tr = elem.closest('tr');
-			if (!tr) return console.error('could not find <tr>');
+			if (!tr) return toast('ERROR', 'Cannot locate <tr> element');
 
 			var index = tr.index;
-			if (index == null) return console.error('missing `index` property');
+			if (index == null) return toast('ERROR', 'Missing `index` property');
 
 			var data = ENTRIES[index];
-			if (!data) return console.error('invalid `index` value');
+			if (!data) return toast('ERROR', 'Invalid `index` value');
 
 			elem.disabled = true;
 			let res = await fetch('/admin/award', {
@@ -93,8 +110,9 @@
 					'Content-Type': 'application/json',
 				},
 				body: JSON.stringify({
-					uid: data.uid, // TODO
+					uid: data.uid,
 					email: data.email,
+					count: COUNT - 1,
 				})
 			});
 
@@ -104,7 +122,18 @@
 				cell.textContent = STATES[2];
 				COUNT--; toCount();
 			} else {
-				console.error('ERROR AWARDING USER');
+				var text = await res.text();
+
+				try {
+					var obj = JSON.parse(text) || {};
+					return toast(
+						'Error ' + (obj.status || 500),
+						obj.reason || 'An unknown error occurred!'
+					);
+				} catch (e) {
+					// was not json
+					return toast('Error ' + res.status, text);
+				}
 			}
 		}
 
