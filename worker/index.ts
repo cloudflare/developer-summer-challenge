@@ -124,13 +124,14 @@ API.add('POST', '/submit', async (req, res) => {
 		return toError(res, 400, 'Error parsing input');
 	}
 
-	let { email, code, projecturl, demourl, cftv } = input || {};
+	let { email, code, projecturl, demourl, cftv, ccsa } = input || {};
 	projecturl = String(projecturl||'').trim();
 	demourl = String(demourl||'').trim();
 	email = String(email||'').trim();
 	code = String(code||'').trim();
 
 	cftv = /^(1|true|on)$/.test(''+cftv);
+	ccsa = /^(1|true|on)$/.test(''+ccsa);
 
 	let prev = await Code.find(code);
 	if (!prev) return toError(res, 404, 'Unknown or expired code');
@@ -155,7 +156,7 @@ API.add('POST', '/submit', async (req, res) => {
 	}
 
 	// Save only the new values
-	entry = { ...entry, projecturl, demourl, cftv };
+	entry = { ...entry, projecturl, demourl, cftv, ccsa };
 	entry.submit_at = utils.seconds();
 
 	let isOK = await Signup.save(entry);

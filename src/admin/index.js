@@ -161,6 +161,7 @@
 					cells += `<td>${toLink(data.projecturl)}</td>`;
 					cells += `<td>${toLink(data.demourl)}</td>`;
 					cells += data.cftv ? '<td>✅</td>' : '<td>⛔️</td>';
+					cells += data.ccsa ? '<td>✅</td>' : '<td>⛔️</td>';
 					cells += data.winner ? EMPTY : '<td><button class="btn pri">AWARD</button></td>';
 					// only winners can get address form
 					if (data.winner && data.address) {
@@ -175,6 +176,7 @@
 					cells += EMPTY; // project url
 					cells += EMPTY; // live demo
 					cells += EMPTY; // cftv
+					cells += EMPTY; // ccsa
 					cells += EMPTY; // BUTTON
 					cells += EMPTY; // Address
 					cells += EMPTY; // Country
