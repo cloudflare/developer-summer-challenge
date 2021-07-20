@@ -15,16 +15,9 @@ export interface Entry {
 	submit_at?: DATETIME;
 	projecturl?: string;
 	demourl?: string;
-	cftv?: boolean;
 	winner?: boolean;
-	address?: {
-		street1: string;
-		street2?: string;
-		country: string;
-		postal: string;
-		state: string;
-		city: string;
-	};
+	cftv?: boolean;
+	ccsa?: boolean;
 }
 
 const toKey = (email: string) => `user:${email}`;
