@@ -44,16 +44,6 @@
 			if (tmp.submit_at) {
 				tmp.submit_at = toDate(tmp.submit_at);
 			}
-			if (tmp.address) {
-				tmp.country = tmp.address.country;
-				tmp.address = [
-					tmp.address.street1, tmp.address.street2,
-					tmp.address.city, tmp.address.state,
-					tmp.address.country, tmp.address.postal,
-				].filter(Boolean).join(',');
-			} else {
-				tmp.country = tmp.address = null;
-			}
 		}
 
 		function toCount() {
@@ -163,14 +153,6 @@
 					cells += data.cftv ? '<td>✅</td>' : '<td>⛔️</td>';
 					cells += data.ccsa ? '<td>✅</td>' : '<td>⛔️</td>';
 					cells += data.winner ? EMPTY : '<td><button class="btn pri">AWARD</button></td>';
-					// only winners can get address form
-					if (data.winner && data.address) {
-						cells += `<td>${data.address}</td>`; // Address
-						cells += `<td>${data.country}</td>`; // Country
-					} else {
-						cells += EMPTY; // Address
-						cells += EMPTY; // Country
-					}
 				} else {
 					cells += EMPTY; // submit_at
 					cells += EMPTY; // project url
@@ -178,8 +160,6 @@
 					cells += EMPTY; // cftv
 					cells += EMPTY; // ccsa
 					cells += EMPTY; // BUTTON
-					cells += EMPTY; // Address
-					cells += EMPTY; // Country
 				}
 
 				tr.innerHTML = cells;
