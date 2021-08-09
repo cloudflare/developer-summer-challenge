@@ -12,6 +12,8 @@ import type { ServerResponse } from 'worktop/response';
 // @ts-ignore :: injected
 import LANDING from 'index.html';
 // @ts-ignore :: injected
+import RULES from 'rules/index.html';
+// @ts-ignore :: injected
 import CONFIRM from 'confirm/index.html';
 // @ts-ignore :: injected
 import SUBMIT from 'submit/index.html';
@@ -35,6 +37,15 @@ API.add('GET', '/', async (req, res) => {
 	// Short-term TTL for remaining swag updates
 	res.setHeader('Cache-Control', 'public,max-age=60');
 	return utils.render(res, LANDING, { count });
+});
+
+/**
+ * GET /rules
+ * Render the Contest Rules HTML page
+ */
+API.add('GET', '/rules', async (req, res) => {
+	res.setHeader('Cache-Control', 'public,max-age=1800');
+	return utils.render(res, RULES);
 });
 
 /**

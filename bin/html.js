@@ -12,6 +12,7 @@ const PAGES = [
 	'admin/index.html',
 	'confirm/index.html',
 	'submit/index.html',
+	'rules/index.html',
 	'done/index.html',
 ];
 
