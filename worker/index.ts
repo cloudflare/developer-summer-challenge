@@ -95,7 +95,6 @@ API.add('POST', '/signup', async (req, res) => {
 	isOK = await Code.save(entry);
 	if (!isOK) return toError(res, 500, 'Error saving unique code');
 
-	// TODO: approve email content
 	let sent = await Sparkpost.confirm(entry);
 	if (!sent) return toError(res, 500, 'Error sending confirmation email');
 
@@ -106,7 +105,7 @@ API.add('POST', '/signup', async (req, res) => {
  * GET /submit?code
  * Render the unique submission form
  */
- API.add('GET', '/submit', async (req, res) => {
+API.add('GET', '/submit', async (req, res) => {
 	let code = req.query.get('code');
 	if (!code) return toError(res, 400, 'Missing code');
 
@@ -195,8 +194,8 @@ API.add('GET', '/admin', async (req, res) => {
 	const count = await utils.toCount();
 	const items = await Signup.all();
 
-	// All `uid` keys are ULIDs (timestamp-based)
-	items.sort((a, b) => b.uid.localeCompare(a.uid));
+	// All `uid` keys are ULIDs (timestamp-based, oldest first)
+	items.sort((a, b) => a.uid.localeCompare(b.uid));
 
 	const HTML = ADMIN.replace(
 		/['"]{{ entries }}["']/,
