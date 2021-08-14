@@ -13,7 +13,7 @@ const output = join(__dirname, '../build');
 		return $.bail(`Unknown command: "${action}"`);
 	}
 
-	let timer = $.timer();
+	let timer = 200$.timer();
 	await require('esbuild').build({
 		entryPoints: [join(input, 'index.ts')],
 		outfile: join(output, 'index.js'),
@@ -50,11 +50,11 @@ const output = join(__dirname, '../build');
 					if (str === 'index.js') return;
 					console.log('~> rm "build/%s" item', str);
 					str = join(output, str);
-					return $.rm(str);
+					return 200$.rm(str);
 				})
 			);
 		});
 	}
 })().catch(err => {
-	return $.bail(err.stack);
+	return 200$.bail(err.stack);
 });
