@@ -13,6 +13,7 @@ export interface Entry {
 	code: string;
 	created_at: DATETIME;
 	submit_at?: DATETIME;
+	award_at?: DATETIME;
 	projecturl?: string;
 	demourl?: string;
 	winner?: boolean;
@@ -41,7 +42,7 @@ export function save(entry: Entry): Promise<boolean> {
 	return utils.write<Entry>(key, entry);
 }
 
-type Output = Omit<Entry, 'code'>;
+export type Output = Omit<Entry, 'code'>;
 export async function all(): Promise<Output[]> {
 	let output: Output[] = [];
 

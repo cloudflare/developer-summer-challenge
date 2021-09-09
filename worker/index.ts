@@ -1,13 +1,12 @@
-import { Router } from 'worktop';
-import * as Cache from 'worktop/cache';
+import { Router, listen } from 'worktop';
 import * as Sparkpost from './emails';
 import * as Signup from './signup';
 import * as utils from './utils';
 import * as Code from './code';
 
-import type { Entry } from './signup';
 import type { ULID } from 'worktop/utils';
 import type { ServerResponse } from 'worktop/response';
+import type { Entry, Output } from './signup';
 
 // @ts-ignore :: injected
 import LANDING from 'index.html';
@@ -206,6 +205,46 @@ API.add('GET', '/admin', async (req, res) => {
 });
 
 /**
+ * GET /admin/winners
+ * Render the Admin dashboard w/ WINNERS only
+ * @NOTE Access protection
+ */
+API.add('GET', '/admin/winners', async (req, res) => {
+	const count = await utils.toCount();
+	const items = await Signup.all();
+
+	let i=0, winners: Output[] = [];
+	for (; i < items.length; i++) {
+		if (items[i].winner) {
+			// first few winners did not have this key
+			items[i].award_at = items[i].award_at || 0;
+			winners.push(items[i]);
+		}
+	}
+
+	// sort by `award_at` timestamp
+	// ~> showing the oldest winners first
+	winners.sort((a, b) => a.award_at! - b.award_at!);
+
+	// if `?csv` -> vendor list
+	if (req.query.has('csv')) {
+		let csv = '';
+		winners.forEach(obj => {
+			let txt = JSON.stringify(obj.firstname + ' ' + obj.lastname);
+			csv += txt + ',' + JSON.stringify(obj.email) + '\n';
+		});
+		return new Response(csv);
+	}
+
+	const HTML = ADMIN.replace(
+		/['"]{{ entries }}["']/,
+		JSON.stringify(JSON.stringify(winners))
+	);
+
+	return utils.render(res, HTML, { count });
+});
+
+/**
  * POST /admin/award
  * Accept a winner!
  * @NOTE Access protection
@@ -247,6 +286,7 @@ API.add('POST', '/admin/award', async (req, res) => {
 
 	entry.winner = true;
 	entry.code = entry.uid;
+	entry.award_at = utils.seconds();
 
 	let isOK = await Code.save(entry);
 	if (!isOK) return toError(res, 500, 'Error saving unique code');
@@ -265,4 +305,4 @@ API.add('POST', '/admin/award', async (req, res) => {
 });
 
 // init; attach Cache API
-Cache.listen(API.run);
+listen(API.run);
