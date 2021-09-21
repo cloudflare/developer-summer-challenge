@@ -23,6 +23,9 @@ import DONE from 'done/index.html';
 
 const API = new Router;
 
+// November 1, 2021 (11:59 PM Pacific Time)
+const CUTOFF = new Date('2021-11-02T06:59:59.999Z');
+
 function toError(res: ServerResponse, status: number, reason: string) {
 	return res.send(status, { status, reason });
 }
@@ -52,6 +55,10 @@ API.add('GET', '/rules', async (req, res) => {
  * Accept the initial signup
  */
 API.add('POST', '/signup', async (req, res) => {
+	if (Date.now() > +CUTOFF) {
+		return toError(res, 400, 'The registration window has closed.');
+	}
+
 	try {
 		var input = await req.body<Entry>();
 	} catch (err) {
@@ -127,6 +134,10 @@ API.add('GET', '/submit', async (req, res) => {
  * Accept the project submission
  */
 API.add('POST', '/submit', async (req, res) => {
+	if (Date.now() > +CUTOFF) {
+		return toError(res, 400, 'The submission window has closed.');
+	}
+
 	try {
 		var input = await req.body<Entry>();
 	} catch (err) {
