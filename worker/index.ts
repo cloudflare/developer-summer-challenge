@@ -245,6 +245,44 @@ API.add('GET', '/admin/winners', async (req, res) => {
 });
 
 /**
+ * GET /admin/idles
+ * Render the Admin dashboard w/ entries who haven't won or submitted
+ * @NOTE Access protection
+ */
+API.add('GET', '/admin/idles', async (req, res) => {
+	const count = await utils.toCount();
+	const items = await Signup.all();
+
+	let i=0, idles: Output[] = [];
+	for (; i < items.length; i++) {
+		if (items[i].submit_at == null) {
+			idles.push(items[i]);
+		}
+	}
+
+	// sort by `created_at` timestamp
+	// ~> showing the oldest registrants first
+	idles.sort((a, b) => a.created_at - b.created_at);
+
+	// if `?csv` -> vendor list
+	if (req.query.has('csv')) {
+		let csv = '';
+		idles.forEach(obj => {
+			let txt = JSON.stringify(obj.firstname + ' ' + obj.lastname);
+			csv += txt + ',' + JSON.stringify(obj.email) + '\n';
+		});
+		return new Response(csv);
+	}
+
+	const HTML = ADMIN.replace(
+		/['"]{{ entries }}["']/,
+		JSON.stringify(JSON.stringify(idles))
+	);
+
+	return utils.render(res, HTML, { count });
+});
+
+/**
  * POST /admin/award
  * Accept a winner!
  * @NOTE Access protection
