@@ -6,11 +6,13 @@ body
 
 table
 	--min 10rem
+	--email 20rem
 	display grid
 	min-width 100%
 	border-collapse collapse
-	// initial values – overridden via JS resizer(s)
-	grid-template-columns minmax(6rem, 1fr) repeat(var(--n, 5), minmax(var(--min), 2fr))
+	// NOTE: there are 12 columns
+	// ignore: initial values – overridden via JS resizer(s)
+	grid-template-columns minmax(6rem,1fr) repeat(2,minmax(var(--min),2fr)) minmax(20rem,1fr) repeat(3,minmax(var(--min),2fr)) repeat(2,minmax(18rem, 1fr)) repeat(3,minmax(var(--min),2fr))
 
 thead, tbody, tr
 	display contents
