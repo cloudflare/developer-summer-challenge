@@ -42,24 +42,15 @@ export function save(entry: Entry): Promise<boolean> {
 	return utils.write<Entry>(key, entry);
 }
 
-export type Output = Omit<Entry, 'code'>;
-export async function all(): Promise<Output[]> {
-	let output: Output[] = [];
+export async function all(): Promise<string[]> {
+	let output: string[] = [];
 
 	let prefix = toKey('');
 	let paginator = utils.list(prefix);
 
 	for await (let payload of paginator) {
 		if (payload.keys.length > 0) {
-			await Promise.all(
-				payload.keys.map(key => {
-					return utils.read<Entry>(key).then(item => {
-						if (!item) return;
-						let { code, ...rest } = item;
-						output.push(rest);
-					});
-				})
-			)
+			output = output.concat(payload.keys);
 		}
 		if (payload.done) {
 			return output;
@@ -67,4 +58,14 @@ export async function all(): Promise<Output[]> {
 	}
 
 	return output;
+}
+
+export type Output = Omit<Entry, 'code'>;
+export function profile(key: string): Promise<Output | void> {
+	return utils.read<Entry>(key).then(item => {
+		if (item) {
+			let { code, ...rest } = item;
+			return rest;
+		}
+	});
 }

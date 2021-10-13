@@ -202,95 +202,32 @@ API.add('POST', '/submit', async (req, res) => {
  */
 API.add('GET', '/admin', async (req, res) => {
 	const count = await utils.toCount();
-	const items = await Signup.all();
-
-	// All `uid` keys are ULIDs (timestamp-based, oldest first)
-	items.sort((a, b) => a.uid.localeCompare(b.uid));
-
-	const HTML = ADMIN.replace(
-		/['"]{{ entries }}["']/,
-		JSON.stringify(JSON.stringify(items))
-	);
-
-	return utils.render(res, HTML, { count });
+	return utils.render(res, ADMIN, { count });
 });
 
 /**
- * GET /admin/winners
- * Render the Admin dashboard w/ WINNERS only
+ * GET /admin/list
+ * Return all "user:<email>" keys to Admin dashboard
  * @NOTE Access protection
  */
-API.add('GET', '/admin/winners', async (req, res) => {
-	const count = await utils.toCount();
-	const items = await Signup.all();
-
-	let i=0, winners: Output[] = [];
-	for (; i < items.length; i++) {
-		if (items[i].winner) {
-			// first few winners did not have this key
-			items[i].award_at = items[i].award_at || 0;
-			winners.push(items[i]);
-		}
-	}
-
-	// sort by `award_at` timestamp
-	// ~> showing the oldest winners first
-	winners.sort((a, b) => a.award_at! - b.award_at!);
-
-	// if `?csv` -> vendor list
-	if (req.query.has('csv')) {
-		let csv = '';
-		winners.forEach(obj => {
-			let txt = JSON.stringify(obj.firstname + ' ' + obj.lastname);
-			csv += txt + ',' + JSON.stringify(obj.email) + '\n';
-		});
-		return new Response(csv);
-	}
-
-	const HTML = ADMIN.replace(
-		/['"]{{ entries }}["']/,
-		JSON.stringify(JSON.stringify(winners))
-	);
-
-	return utils.render(res, HTML, { count });
+API.add('GET', '/admin/list', async (req, res) => {
+	let items = await Signup.all();
+	return res.send(200, items, {
+		'cache-control': 'private,max-age=60'
+	});
 });
 
 /**
- * GET /admin/idles
- * Render the Admin dashboard w/ entries who haven't won or submitted
+ * POST /admin/chunk
+ * Exchange "user:<email>" keys for User data
  * @NOTE Access protection
  */
-API.add('GET', '/admin/idles', async (req, res) => {
-	const count = await utils.toCount();
-	const items = await Signup.all();
-
-	let i=0, idles: Output[] = [];
-	for (; i < items.length; i++) {
-		if (items[i].submit_at == null) {
-			idles.push(items[i]);
-		}
-	}
-
-	// sort by `created_at` timestamp
-	// ~> showing the oldest registrants first
-	idles.sort((a, b) => a.created_at - b.created_at);
-
-	// if `?csv` -> vendor list
-	if (req.query.has('csv')) {
-		let csv = '';
-		idles.forEach(obj => {
-			let txt = JSON.stringify(obj.firstname + ' ' + obj.lastname);
-			csv += txt + ',' + JSON.stringify(obj.email) + '\n';
-		});
-		return new Response(csv);
-	}
-
-	const HTML = ADMIN.replace(
-		/['"]{{ entries }}["']/,
-		JSON.stringify(JSON.stringify(idles))
+API.add('POST', '/admin/chunk', async (req, res) => {
+	let keys = await req.body.json();
+	let values: Output[] = await Promise.all(
+		keys.map(Signup.profile)
 	);
-
-	return utils.render(res, HTML, { count });
+	return res.send(200, values);
 });
 
 /**
@@ -353,5 +290,5 @@ API.add('POST', '/admin/award', async (req, res) => {
 	res.end('OK');
 });
 
-// init; attach Cache API
+// init
 listen(API.run);

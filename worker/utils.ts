@@ -20,6 +20,10 @@ export function list(prefix: string, limit = 1000) {
 	return DB.list(DATA, { prefix, limit });
 }
 
+export function paginate(prefix: string, page: number, limit = 50) {
+	return DB.paginate(DATA, { prefix, page, limit });
+}
+
 export function toCount(): Promise<string> {
 	return DB.read(DATA, '::remain', 'text').then(v => v || '300+');
 }

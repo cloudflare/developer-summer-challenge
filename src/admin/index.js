@@ -6,10 +6,13 @@
 	/** @param {string} x */
 	var toLink = x => `<a href="${x}" target="_blank">${x}</a>`;
 
-	var EMPTY = '<td class="na"> – </td>';
-	var STATES = ['SIGNUP', 'SUBMIT', 'WINNER'];
-	var ENTRIES = JSON.parse('{{ entries }}');
+	// NOTE :: injected via utils.render
 	var COUNT = parseInt('{{ count }}', 10);
+	var STATES = ['SIGNUP', 'SUBMIT', 'WINNER'];
+	var EMPTY = '<td class="na"> – </td>';
+
+	var isCSV = /[&?]csv/i.test(location.search);
+	var ITEMS, FETCHER = gather(); // get the data
 
 	var toaster;
 	function toast(title, text) {
@@ -28,15 +31,105 @@
 		setTimeout(() => toaster.removeChild(toast), 10e3);
 	}
 
-	function onload() {
+	/**
+	 * @param {string[]} keys
+	 */
+	async function toChunk(keys) {
+		let res = await fetch('/admin/chunk', {
+			method: 'POST',
+			body: JSON.stringify(keys),
+		});
+
+		if (res.ok) return res.json();
+		await res.text().then(txt => {
+			console.error('[ERROR]', txt);
+		});
+	}
+
+	async function gather() {
+		let list = await fetch('/admin/list');
+		let keys = await list.json();
+
+		let output = [];
+		let group, tasks=[];
+
+		while (keys.length > 0) {
+			group = keys.splice(0, 100);
+			tasks.push(
+				toChunk(group).then(items => {
+					output.push(...items);
+				})
+			);
+		}
+
+		await Promise.all(tasks);
+
+		let query = new URLSearchParams(location.search);
+
+		let type = query.get('type');
+		let isWinner = type === 'winner';
+		let isSubmit = type === 'submit';
+		let isIdle = type === 'idle';
+
+		let i=0, tmp, items = [];
+		for (; i < output.length; i++) {
+			tmp = output[i];
+			if (!tmp) continue;
+			if (isIdle && tmp.submit_at == null) {
+				items.push(tmp);
+			} else if (isSubmit && tmp.submit_at != null && !tmp.winner) {
+				items.push(tmp);
+			} else if (isWinner && tmp.winner) {
+				// first few winners didnt have this
+				tmp.award_at = tmp.award_at || 0;
+				items.push(tmp);
+			} else if (!type) {
+				items.push(tmp);
+			}
+		}
+
+		if (isWinner) {
+			// sort by `award_at` timestamp
+			// ~> showing the oldest winners first
+			items.sort((a, b) => a.award_at - b.award_at);
+		} else {
+			// sort by `created_at` timestamp
+			// ~> showing the oldest registrants first
+			items.sort((a, b) => a.created_at - b.created_at);
+		}
+
+		return items;
+	}
+
+	async function onload() {
+		var root = document.documentElement;
+
+		if (isCSV) {
+			root.innerText = 'Loading...';
+		}
+
+		ITEMS = await FETCHER;
+
+		if (isCSV) {
+			let i=0, tmp, text='';
+			for (; i < ITEMS.length; i++) {
+				tmp = ITEMS[i];
+				text += JSON.stringify(tmp.firstname + ' ' + tmp.lastname);
+				text += ',' + JSON.stringify(tmp.email) + '\n';
+			}
+			return root.innerText = text;
+		}
+
 		var $ = document.querySelector.bind(document);
 		var $sorts = document.querySelectorAll('th[sort]');
-		// var $cols = document.querySelectorAll('th');
 		var tmp, $count = $('footer > b');
 		var i=0, $tbody=$('tbody');
 
-		for (i=0; i < ENTRIES.length; i++) {
-			tmp = ENTRIES[i];
+		toCount();
+
+		// Normalize data for display
+		for (i=0; i < ITEMS.length; i++) {
+			tmp = ITEMS[i];
 			tmp.seq = i + 1;
 			tmp.winner = !!tmp.winner;
 			tmp.state = tmp.winner ? 2 : tmp.submit_at ? 1 : 0;
@@ -65,8 +158,8 @@
 			}
 
 			elem.$sort === 1
-				? ENTRIES.sort((a, b) => a[attr] == null ? -1 : a[attr] - b[attr]) // ASC
-				: ENTRIES.sort((a, b) => b[attr] == null ? -1 : b[attr] - a[attr]); // DESC
+				? ITEMS.sort((a, b) => a[attr] == null ? -1 : a[attr] - b[attr]) // ASC
+				: ITEMS.sort((a, b) => b[attr] == null ? -1 : b[attr] - a[attr]); // DESC
 
 			// reset others
 			for (i=0; i < $sorts.length; i++) {
@@ -90,7 +183,7 @@
 			var index = tr.index;
 			if (index == null) return toast('ERROR', 'Missing `index` property');
 
-			var data = ENTRIES[index];
+			var data = ITEMS[index];
 			if (!data) return toast('ERROR', 'Invalid `index` value');
 
 			elem.disabled = true;
@@ -132,9 +225,9 @@
 			$tbody.textContent = '';
 
 			var data, tr, cells='';
-			for (i=0; i < ENTRIES.length; i++) {
+			for (i=0; i < ITEMS.length; i++) {
 				cells = '';
-				data = ENTRIES[i];
+				data = ITEMS[i];
 				tr = document.createElement('tr');
 				tr.index = i;
 
@@ -168,7 +261,6 @@
 		}
 
 		// draw
-		toCount();
 		render();
 
 		// initialize listeners
