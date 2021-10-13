@@ -5,27 +5,25 @@ body
 	overflow-x scroll
 
 table
-	--min 10rem
-	--email 20rem
-	display grid
-	min-width 100%
 	border-collapse collapse
+	// --min 10rem
+	// --email 20rem
+	// display grid
+	// min-width 100%
 	// NOTE: there are 12 columns
 	// ignore: initial values – overridden via JS resizer(s)
-	grid-template-columns minmax(6rem,1fr) repeat(2,minmax(var(--min),2fr)) minmax(20rem,1fr) repeat(3,minmax(var(--min),2fr)) repeat(2,minmax(18rem, 1fr)) repeat(3,minmax(var(--min),2fr))
+	// grid-template-columns minmax(6rem,1fr) repeat(2,minmax(var(--min),2fr)) minmax(20rem,1fr) repeat(3,minmax(var(--min),2fr)) repeat(2,minmax(18rem, 1fr)) repeat(3,minmax(var(--min),2fr))
 
-thead, tbody, tr
-	display contents
+// thead, tbody, tr
+// 	display contents
 
 th, td
 	padding 1rem
 	overflow hidden
 	text-overflow ellipsis
 	white-space nowrap
-
-// td:nth-child(5), // status
-// td:nth-child(10) // CFTV
-// 	text-align center
+	min-width 10rem
+	max-width 20rem
 
 th
 	color white
@@ -74,6 +72,12 @@ th[sort].asc::after
 th[sort].desc::after
 	opacity 0.7
 	content '↓'
+
+// sort=num
+th:first-child,
+td:first-child
+	min-width 5rem
+
 
 td
 	padding-top 0.75rem
