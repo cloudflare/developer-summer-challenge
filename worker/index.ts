@@ -35,7 +35,10 @@ function toError(res: ServerResponse, status: number, reason: string) {
  * Render HTML page
  */
 API.add('GET', '/', async (req, res) => {
-	const count = await utils.toCount();
+	let count = await utils.toCount();
+	// Temporarily fake it
+	let value = Math.min(178, +count || 300);
+	count = String(value);
 	// Short-term TTL for remaining swag updates
 	res.setHeader('Cache-Control', 'public,max-age=60');
 	return utils.render(res, LANDING, { count });
