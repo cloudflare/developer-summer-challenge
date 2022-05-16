@@ -25,7 +25,7 @@ export function paginate(prefix: string, page: number, limit = 50) {
 }
 
 export function toCount(): Promise<string> {
-	return DB.read(DATA, '::remain', 'text').then(v => v || '300+');
+	return DB.read(DATA, '::remain', 'text').then(v => v || '150+');
 }
 
 export function setCount(value: string|number): Promise<boolean> {

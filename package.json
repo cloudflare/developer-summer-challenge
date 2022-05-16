@@ -11,6 +11,7 @@
     "node": ">=14"
   },
   "devDependencies": {
+    "@types/node": "16.11.13",
     "esbuild": "0.12.10",
     "html-minifier-terser": "5.1.1",
     "servor": "4.0.2",

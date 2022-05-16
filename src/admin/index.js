@@ -112,10 +112,18 @@
 
 		if (isCSV) {
 			let i=0, tmp, text='';
+			// name, email, status, source_link, demo_link, cftv, ccsa,
 			for (; i < ITEMS.length; i++) {
 				tmp = ITEMS[i];
+				if (!tmp.submit_at) continue;
 				text += JSON.stringify(tmp.firstname + ' ' + tmp.lastname);
-				text += ',' + JSON.stringify(tmp.email) + '\n';
+				text += ',' + JSON.stringify(tmp.email);
+				text += ',' + JSON.stringify(+!!tmp.winner);
+				text += ',' + JSON.stringify(tmp.projecturl);
+				text += ',' + JSON.stringify(tmp.demourl);
+				text += ',' + JSON.stringify(+!!tmp.cftv);
+				text += ',' + JSON.stringify(+!!tmp.ccsa);
+				text += '\n';
 			}
 			return root.innerText = text;
 		}

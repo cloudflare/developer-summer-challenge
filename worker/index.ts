@@ -23,8 +23,8 @@ import DONE from 'done/index.html';
 
 const API = new Router;
 
-// November 1, 2021 (11:59 PM Pacific Time)
-const CUTOFF = new Date('2021-11-02T06:59:59.999Z');
+// May 21, 2022 (11:59 PM Pacific Time)
+const CUTOFF = new Date('2022-05-22T06:59:59.999Z');
 
 function toError(res: ServerResponse, status: number, reason: string) {
 	return res.send(status, { status, reason });
@@ -36,11 +36,6 @@ function toError(res: ServerResponse, status: number, reason: string) {
  */
 API.add('GET', '/', async (req, res) => {
 	let count = await utils.toCount();
-	// Temporarily fake it
-	let value = Math.min(178, +count || 300);
-	count = String(value);
-	// Short-term TTL for remaining swag updates
-	res.setHeader('Cache-Control', 'public,max-age=60');
 	return utils.render(res, LANDING, { count });
 });
 
@@ -48,8 +43,7 @@ API.add('GET', '/', async (req, res) => {
  * GET /rules
  * Render the Contest Rules HTML page
  */
-API.add('GET', '/rules', async (req, res) => {
-	res.setHeader('Cache-Control', 'public,max-age=1800');
+API.add('GET', '/rules/', async (req, res) => {
 	return utils.render(res, RULES);
 });
 
@@ -57,7 +51,7 @@ API.add('GET', '/rules', async (req, res) => {
  * POST /signup
  * Accept the initial signup
  */
-API.add('POST', '/signup', async (req, res) => {
+API.add('POST', '/signup/', async (req, res) => {
 	if (Date.now() > +CUTOFF) {
 		return toError(res, 400, 'The registration window has closed.');
 	}
@@ -114,7 +108,7 @@ API.add('POST', '/signup', async (req, res) => {
  * GET /submit?code
  * Render the unique submission form
  */
-API.add('GET', '/submit', async (req, res) => {
+API.add('GET', '/submit/', async (req, res) => {
 	let code = req.query.get('code');
 	if (!code) return toError(res, 400, 'Missing code');
 
@@ -136,7 +130,7 @@ API.add('GET', '/submit', async (req, res) => {
  * POST /submit
  * Accept the project submission
  */
-API.add('POST', '/submit', async (req, res) => {
+API.add('POST', '/submit/', async (req, res) => {
 	if (Date.now() > +CUTOFF) {
 		return toError(res, 400, 'The submission window has closed.');
 	}
@@ -203,7 +197,7 @@ API.add('POST', '/submit', async (req, res) => {
  * Render the Admin dashboard
  * @NOTE Access protection
  */
-API.add('GET', '/admin', async (req, res) => {
+API.add('GET', '/admin/', async (req, res) => {
 	const count = await utils.toCount();
 	return utils.render(res, ADMIN, { count });
 });
@@ -213,7 +207,7 @@ API.add('GET', '/admin', async (req, res) => {
  * Return all "user:<email>" keys to Admin dashboard
  * @NOTE Access protection
  */
-API.add('GET', '/admin/list', async (req, res) => {
+API.add('GET', '/admin/list/', async (req, res) => {
 	let items = await Signup.all();
 	return res.send(200, items, {
 		'cache-control': 'private,max-age=60'
@@ -225,7 +219,7 @@ API.add('GET', '/admin/list', async (req, res) => {
  * Exchange "user:<email>" keys for User data
  * @NOTE Access protection
  */
-API.add('POST', '/admin/chunk', async (req, res) => {
+API.add('POST', '/admin/chunk/', async (req, res) => {
 	let keys = await req.body.json();
 	let values: Output[] = await Promise.all(
 		keys.map(Signup.profile)
@@ -238,7 +232,7 @@ API.add('POST', '/admin/chunk', async (req, res) => {
  * Accept a winner!
  * @NOTE Access protection
  */
-API.add('POST', '/admin/award', async (req, res) => {
+API.add('POST', '/admin/award/', async (req, res) => {
 	try {
 		type Input = Pick<Entry, 'uid'|'email'> & { count: number };
 		var input = await req.body<Input>();
