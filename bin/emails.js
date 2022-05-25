@@ -41,7 +41,7 @@ const SUBMIT = {
 	options,
 	content: {
 		subject: '[Cloudflare]: Developer Challenge Received!',
-		html: `<p>Wow, {{firstname}}! <b>You did it!</b></p><p>Thank you for taking the time to finish and submit your entry for the Developer Challenge. Our records show that you sent us:</p><ul><li>Source Code – {{projecturl}}</li><li>Live Demo – {{demourl}}</li></ul><p><b>NOTE:</b> Please verify that both links are working and publicly-accessible.</p><p>We will review your submission ASAP.</p><p>Submission deadline is <b>May 24th, 2022</b>. If you win a <b>swag box</b>, we will notify you directly via email in order to proceed with shipping information.</p><p>Good luck!</p>`,
+		html: `<p>Wow, {{firstname}}! <b>You did it!</b></p><p>Thank you for taking the time to finish and submit your entry for the Developer Challenge. Our records show that you sent us:</p><ul><li>Source Code – {{projecturl}}</li><li>Live Demo – {{demourl}}</li></ul><p><b>NOTE:</b> Please verify that both links are working and publicly-accessible.</p><p>We will review your submission ASAP.</p><p>Submission deadline is <b>June 7th, 2022</b>. If you win a <b>swag box</b>, we will notify you directly via email in order to proceed with shipping information.</p><p>Good luck!</p>`,
 		from,
 	}
 };
