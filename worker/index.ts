@@ -23,8 +23,8 @@ import DONE from 'done/index.html';
 
 const API = new Router;
 
-// May 21, 2022 (11:59 PM Pacific Time)
-const CUTOFF = new Date('2022-05-22T06:59:59.999Z');
+// June 07, 2022 (11:59 PM Pacific Time)
+const CUTOFF = new Date('2022-06-07T06:59:59.999Z');
 
 function toError(res: ServerResponse, status: number, reason: string) {
 	return res.send(status, { status, reason });
