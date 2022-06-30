@@ -28,7 +28,7 @@ This will watch the `/src` directory for any file changes, automatically reloadi
 
 ***Worker***
 
-You should already have `wranger` installed. Start a development server via:
+You should already have `wrangler` installed. Start a development server via:
 
 ```sh
 $ wrangler dev
