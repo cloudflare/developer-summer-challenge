@@ -2,10 +2,10 @@ name = "challenge"
 type = "javascript"
 
 # workers dx
-account_id = "<< ACCOUNT ID >>"
+account_id = "b54f07a6c269ecca2fa60f1ae4920c99"
 workers_dev = true
-zone_id = ""
-route = ""
+zone_id = "351cf9fc660523187714fa772ad5ca49"
+route = "challenge.developers.cloudflare.com/*"
 
 [build]
 command = "yarn build"
@@ -19,5 +19,5 @@ format = "service-worker"
 
 [[kv_namespaces]]
 binding = "DATA"
-preview_id = "<< KV NAMESPACE ID >>"
-id = "<< KV NAMESPACE ID >>"
+preview_id = "9b39e1c1e9fa47a0a387923fa395fac8"
+id = "9b39e1c1e9fa47a0a387923fa395fac8"

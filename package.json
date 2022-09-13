@@ -18,5 +18,8 @@
     "stylus": "0.54.8",
     "watchlist": "0.2.3",
     "worktop": "0.7.1"
+  },
+  "volta": {
+    "node": "12.22.12"
   }
 }
